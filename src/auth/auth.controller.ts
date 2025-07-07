@@ -22,24 +22,25 @@ export class AuthController {
   ) {}
 
   @UseGuards(GoogleAuthGuard)
-  @Get('google')
+  @Get('/google')
   async auth() {
     return HttpStatus.OK;
   }
 
   @UseGuards(GoogleAuthGuard)
-  @Get('google/callback')
-  async authCallback(@User() user: OauthUserDto, @Res() response: Response) {
+  @Get('/google/callback')
+  async authCallback(@User() user: OauthUserDto, @Res() response: Response): Promise<void> {
     try {
       const { accessToken, refreshToken } = await this.authService.login(user);
 
       response.cookie('accessToken', accessToken, {
-        maxAge: 1000 * 60 * 60, // 1 hour
+        maxAge: 3600000, // 1 hour
       });
 
       response.cookie('refreshToken', refreshToken);
 
-      response.redirect('http://localhost:4433'); // 다시 돌아올 경로
+      response.redirect('http://localhost:5173'); // 다시 돌아올 경로
+
     } catch (error) {
       console.error(error);
 

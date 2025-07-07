@@ -26,11 +26,19 @@ export class UserService {
   ) {}
 
   async findUserByIdentifier(identifier: string) {
+    console.log(identifier)
+
     const social = await this.socialLoginRepo.findOne({
       where: { identifier },
+      relations: ['user'],
     });
 
-    if (!social) throw new LoginException('Social login not found');
+    console.log(social);
+
+    if (!social) {
+      // throw new LoginException('Social login not found');
+      return null;
+    };
 
     return await this.userRepository.findOne({
       where: { id: social.userId },

@@ -10,7 +10,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     super({
       clientID: configService.get<string>('GOOGLE_CLIENT_ID'), // ID
       clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'), // PWD
-      callbackURL: configService.get<string>('http://localhost:4433'), // 성공 시 URL
+      callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'), // 성공 시 URL
       scope: ['email', 'profile'], // 성공 시 받을 데이터
     });
   }
