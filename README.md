@@ -7,6 +7,6 @@
 
 # 버전
 
-node 22.16.0
-npm 10.9.2
-@nestjs/cli 11.0.7
+- node 22.16.0
+- npm 10.9.2
+- @nestjs/cli 11.0.7
