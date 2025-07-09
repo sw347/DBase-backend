@@ -6,10 +6,7 @@ export class RoadmapController {
   constructor(private readonly roadmapService: RoadmapService) {}
 
   @Get()
-  getRoadmap(
-    @Query('job') job: string,
-    @Query('period') period: string,
-  ) {
+  getRoadmap(@Query('job') job: string, @Query('period') period: string) {
     if (!job || !period) {
       return { error: '희망 직무 또는 목표 기간 누락' };
     }

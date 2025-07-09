@@ -26,19 +26,14 @@ export class UserService {
   ) {}
 
   async findUserByIdentifier(identifier: string) {
-    console.log(identifier)
-
     const social = await this.socialLoginRepo.findOne({
       where: { identifier },
       relations: ['user'],
     });
 
-    console.log(social);
-
     if (!social) {
-      // throw new LoginException('Social login not found');
       return null;
-    };
+    }
 
     return await this.userRepository.findOne({
       where: { id: social.userId },
@@ -70,7 +65,6 @@ export class UserService {
       userId = result.identifiers[0].id;
 
       await qr.manager.insert(SocialLoginEntity, {
-        type: 'google',
         identifier: oauthUser.identifier,
         userId,
       });

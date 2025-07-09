@@ -9,6 +9,7 @@ import { UserEntity } from './user/entities/user.entity';
 import { SocialLoginEntity } from './user/entities/social-login.entity';
 import { UserTokenEntity } from './user/entities/user-token.entity';
 import { RoadmapModule } from './roadmap/roadmap.module';
+import { JobModule } from './job/job.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { RoadmapModule } from './roadmap/roadmap.module';
     UserModule,
     AuthModule,
     RoadmapModule,
+    JobModule,
   ],
   controllers: [AppController],
   providers: [AppService],

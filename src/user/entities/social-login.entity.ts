@@ -15,9 +15,6 @@ export class SocialLoginEntity {
   @Column({ name: 'user_id', type: 'int', nullable: false })
   userId: number;
 
-  @Column({ name: 'type', type: 'varchar', length: 191, nullable: false })
-  type: string;
-
   @Column({ name: 'identifier', type: 'varchar', length: 191, nullable: false })
   identifier: string;
 

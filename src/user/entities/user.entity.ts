@@ -17,11 +17,11 @@ export class UserEntity {
   @Column({ name: 'email', type: 'varchar', length: 191, unique: true })
   email: string;
 
-  @Column({ name: 'phone_number', type: 'varchar', unique: true })
-  phoneNumber?: string;
+  // @Column({ name: 'phone_number', type: 'varchar', unique: true })
+  // phoneNumber?: string;
 
-  @Column({ name: 'address', type: 'varchar', length: 191 })
-  address?: string;
+  // @Column({ name: 'address', type: 'varchar', length: 191 })
+  // address?: string;
 
   @Column({ name: 'role', type: 'varchar' })
   role: string;
