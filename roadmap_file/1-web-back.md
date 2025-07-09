@@ -1,31 +1,48 @@
-## 웹 개발 - 백엔드: 간단한 블로그 API 서버 (Node.js + Express.js + MySQL)
-> 목표: Node.js와 Express.js를 사용하여 RESTful API 서버를 구축하고, MySQL 데이터베이스와 연동하여 기본적인 CRUD(생성, 읽기, 수정, 삭제) 기능을 구현합니다.
+## 서울디지텍고등학교 학생을 위한 웹 백엔드 개발 1개월 로드맵: 간단한 게시판 만들기 (Python & Flask)
 
-### 1주차: Node.js 및 Express.js 환경 설정, MySQL 연동
-- Node.js 설치 및 npm/yarn 초기화
-- Express.js 설치 및 기본 서버 구조 설정 (app.js 또는 index.js)
-- MySQL 데이터베이스 설치 및 초기 설정 (데이터베이스, 사용자 생성)
-- mysql2 또는 sequelize 라이브러리 설치 및 Node.js와 MySQL 연결 테스트
-- 게시글 테이블 (posts) 스키마 설계 (id, title, content, author, created_at 등)
-- Git/GitHub 저장소 생성 및 초기 커밋
+> 목표: Python Flask 프레임워크를 사용하여 간단한 게시판을 개발하고, 웹 백엔드 개발의 기초를 다집니다.
 
-### 2주차: 게시글 조회 및 생성 API 구현
-- 모든 게시글 조회 API (GET /posts) 구현 (데이터베이스에서 모든 게시글 가져오기)
-- 특정 ID의 게시글 조회 API (GET /posts/:id) 구현
-- 새로운 게시글 생성 API (POST /posts) 구현 (클라이언트로부터 데이터 받아 데이터베이스에 저장)
-- API 테스트 도구 사용법 학습 (Postman 또는 VS Code REST Client)
+### 1주차: Python & Flask 기초 다지기
 
-### 3주차: 게시글 수정 및 삭제 API 구현
-- 특정 ID의 게시글 수정 API (PUT /posts/:id 또는 PATCH /posts/:id) 구현
-- 특정 ID의 게시글 삭제 API (DELETE /posts/:id) 구현
-- 데이터베이스 트랜잭션의 개념 이해 (선택 사항, 고급)
-- API 에러 핸들링 구현 (예: 게시글이 없을 경우 404 응답)
+- Python 기본 문법 복습 (변수, 자료형, 조건문, 반복문, 함수 등)
+- Python 가상 환경 설정 및 관리 (venv 또는 conda)
+- Flask 프레임워크 설치 및 기본 구조 이해 (app.py, templates, static 폴더)
+- 간단한 Flask 앱 만들기 (Hello, World! 출력)
+- Flask 라우팅 개념 학습 및 URL 매핑 연습 (GET, POST 메소드 이해)
+- HTML 기초 복습 (태그, 속성, 폼)
 
-### 4주차: 프로젝트 마무리 및 문서화
-- 코드 리팩토링 및 모듈화 (라우터, 컨트롤러, 서비스 분리)
-- 환경 변수 관리 (dotenv 라이브러리 사용)
-- API 문서화 (Swagger 또는 간단한 Markdown 파일)
-- README.md 파일 작성 (프로젝트 설명, API 엔드포인트, 사용 기술, 설치 및 실행 방법 등)
+### 2주차: 게시판 기능 구현 (데이터베이스 연결 및 CRUD)
+
+- 데이터베이스 선택 (SQLite 권장, 또는 MySQL 설치 및 설정)
+- ORM (Object-Relational Mapping) 개념 학습 (SQLAlchemy 사용)
+- SQLAlchemy를 사용하여 데이터베이스 모델 정의 (게시글, 사용자)
+- 게시글 CRUD (Create, Read, Update, Delete) 기능 구현
+  - 게시글 목록 조회 기능 구현
+  - 게시글 작성 기능 구현
+  - 게시글 상세 조회 기능 구현
+  - 게시글 수정 기능 구현
+  - 게시글 삭제 기능 구현
+- HTML 템플릿을 사용하여 사용자 인터페이스 구현 (Jinja2 템플릿 엔진)
+
+### 3주차: 사용자 인증 및 보안 강화
+
+- 사용자 계정 생성 및 관리 기능 구현
+  - 회원 가입 기능 구현
+  - 로그인 기능 구현
+  - 로그아웃 기능 구현
+- 비밀번호 암호화 (bcrypt 또는 Werkzeug security 사용)
+- 세션 관리 (flask-session 사용)
+- CSRF (Cross-Site Request Forgery) 공격 방어
+- 기본적인 입력 유효성 검사 및 예외 처리
+- 추가 기능 구현 (선택 사항): 검색 기능, 페이징 기능 등
+
+### 최종: 프로젝트 마무리 및 배포 (4주차)
+
+- 코드 리팩토링 및 가독성 향상
+- 에러 핸들링 및 사용자 경험 개선
+- 간단한 디자인 적용 (CSS, Bootstrap 활용)
+- 프로젝트 빌드 및 PythonAnywhere 또는 Heroku를 통한 배포 (무료 플랜 활용)
+- README.md 파일 작성 (프로젝트 설명, 사용 기술, 설치 및 실행 방법 등)
 - Git/GitHub를 통한 최종 코드 관리 및 포트폴리오 준비
 
 [🔗 백엔드 개발자 로드맵](https://roadmap.sh/backend)
