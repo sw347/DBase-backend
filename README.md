@@ -1,9 +1,14 @@
 # 실행방법
 
-1. git clone https://github.com/sw347/DBase-backend.git
-2. npm install
-3. npm install -g @nestjs/cli
-4. nest start && nest start --watch
+```sh
+git clone https://github.com/sw347/DBase-backend.git
+```
+
+```sh
+npm install
+npm install -g @nestjs/cli
+nest start && nest start --watch
+```
 
 # 버전
 
