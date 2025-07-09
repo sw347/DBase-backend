@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'social_login', database: 'main' })
+@Entity({ name: 'social_login', database: 'DBase' })
 export class SocialLoginEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int' })
   id: number;
