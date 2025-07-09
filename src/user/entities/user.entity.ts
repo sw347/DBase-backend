@@ -1,7 +1,7 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { SocialLoginEntity } from './social-login.entity';
 
-@Entity({ name: 'user', database: 'company_db' })
+@Entity({ name: 'user', database: 'DBase' })
 export class UserEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int' })
   id: number;

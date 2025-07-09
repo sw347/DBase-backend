@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'user_token', database: 'company_db' })
+@Entity({ name: 'user_token', database: 'DBase' })
 export class UserTokenEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int' })
   id: number;
