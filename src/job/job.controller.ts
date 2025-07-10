@@ -26,7 +26,9 @@ export class JobController {
 
           const length = fs.readdirSync('./uploads/jobInformation').length;
 
-          fs.mkdirSync(`./uploads/jobInformation/${length + 1}`);
+          if (!fs.existsSync('./uploads/jobInformation')) {
+            fs.mkdirSync(`./uploads/jobInformation/${length + 1}`);
+          }
 
           cb(null, `./uploads/jobInformation/${length + 1}`); // 파일 저장 경로 설정
         },
