@@ -23,31 +23,31 @@ export class JobInformationEntity {
   @JoinColumn({ name: 'company_id' })
   company: CompanyInformationEntity;
 
-  @Column({ name: 'job_title', type: 'varchar', length: 255 })
+  @Column({ name: 'job_title', type: 'text' })
   job_title: string;
 
   @Column({ name: 'recruitment_count', type: 'int' })
   recruitment_count: number;
 
-  @Column({ name: 'job_description', type: 'varchar' })
+  @Column({ name: 'job_description', type: 'text' })
   job_description: string;
 
-  @Column({ name: 'qualifications', type: 'varchar', length: 255 })
+  @Column({ name: 'qualifications', type: 'text' })
   qualifications: string;
 
-  @Column({ name: 'working_hours', type: 'varchar', length: 255 })
+  @Column({ name: 'working_hours', type: 'text' })
   working_hours: string;
 
-  @Column({ name: 'work_type', type: 'varchar', length: 255 })
+  @Column({ name: 'work_type', type: 'text' })
   work_type: string;
 
-  @Column({ name: 'required_documents', type: 'varchar', length: 255 })
+  @Column({ name: 'required_documents', type: 'text' })
   required_documents: string;
 
-  @Column({ name: 'internship_pay', type: 'varchar', length: 50 })
+  @Column({ name: 'internship_pay', type: 'varchar', length: 100 })
   internship_pay: string;
 
-  @Column({ name: 'salary', type: 'varchar', length: 50 })
+  @Column({ name: 'salary', type: 'varchar', length: 100 })
   salary: string;
 
   @Column({ name: 'additional_requirements', type: 'text' })

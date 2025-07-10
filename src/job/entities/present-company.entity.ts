@@ -15,7 +15,9 @@ export class PresentCompanyEntity {
   @Column({ name: 'company_id', type: 'int' })
   company_id: number;
 
-  @ManyToOne(() => CompanyInformationEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => CompanyInformationEntity, (company) => company.present, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'company_id' })
   company: CompanyInformationEntity;
 }
