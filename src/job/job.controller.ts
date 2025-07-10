@@ -21,13 +21,19 @@ export class JobController {
       storage: diskStorage({
         destination: function (req, file, cb) {
           if (!fs.existsSync('./uploads')) {
+            fs.mkdirSync('./uploads', { recursive: true });
+          }
+
+          if (!fs.existsSync('./uploads/jobInformation')) {
             fs.mkdirSync('./uploads/jobInformation', { recursive: true });
           }
 
           const length = fs.readdirSync('./uploads/jobInformation').length;
 
-          if (!fs.existsSync('./uploads/jobInformation')) {
-            fs.mkdirSync(`./uploads/jobInformation/${length + 1}`);
+          if (!fs.existsSync(`./uploads/jobInformation/${length + 1}`)) {
+            fs.mkdirSync(`./uploads/jobInformation/${length + 1}`, {
+              recursive: true,
+            });
           }
 
           cb(null, `./uploads/jobInformation/${length + 1}`); // 파일 저장 경로 설정
