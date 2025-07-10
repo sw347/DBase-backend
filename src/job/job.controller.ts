@@ -46,9 +46,8 @@ export class JobController {
       }),
     }),
   )
-  async inputJob(@UploadedFile() file: Express.Multer.File): Promise<void> {
-    this.jobService.receivedFile();
-    // this.jobService.sendFile(file.originalname); // 인공지능 서버에 파일 전송
+  async inputJob(@UploadedFile() file: Express.Multer.File) {
+    return this.jobService.sendFile(file.originalname); // 인공지능 서버에 파일 전송
   }
 
   @Get()
