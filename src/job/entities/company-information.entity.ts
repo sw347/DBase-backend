@@ -10,7 +10,7 @@ export class CompanyInformationEntity {
   @Column({ name: 'year', type: 'int' })
   year: number;
 
-  @Column({ name: 'company_name', type: 'varchar', length: 255 })
+  @Column({ name: 'company_name', type: 'varchar', length: 255, unique: true })
   company_name: string;
 
   @Column({ name: 'deadline', type: 'varchar', nullable: true })
@@ -28,7 +28,7 @@ export class CompanyInformationEntity {
   @Column({ name: 'main_business', type: 'text' })
   main_business: string;
 
-  @Column({ name: 'website', type: 'varchar', length: 512 })
+  @Column({ name: 'website', type: 'varchar', length: 512, nullable: true })
   website: string;
 
   @Column({ name: 'address', type: 'text' })
