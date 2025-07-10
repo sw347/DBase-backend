@@ -23,6 +23,8 @@ export class JobService {
           fileName,
         })
         .then((response) => {
+          console.log('AI 서버로부터 응답 실패:', response.data.message);
+
           if (response.data.status == 'success') {
             return { success: true };
           } else {
