@@ -29,7 +29,7 @@ export class JobInformationEntity {
   @Column({ name: 'recruitment_count', type: 'int' })
   recruitment_count: number;
 
-  @Column({ name: 'job_description', type: 'text' })
+  @Column({ name: 'job_description', type: 'text', nullable: true })
   job_description: string;
 
   @Column({ name: 'qualifications', type: 'text' })
