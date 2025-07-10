@@ -21,10 +21,14 @@ export class JobController {
       storage: diskStorage({
         destination: function (req, file, cb) {
           if (!fs.existsSync('./uploads')) {
-            fs.mkdirSync('./uploads', { recursive: true });
+            fs.mkdirSync('./uploads/jobInformation', { recursive: true });
           }
 
-          cb(null, './uploads');
+          const length = fs.readdirSync('./uploads/jobInformation').length;
+
+          fs.mkdirSync(`./uploads/jobInformation/${length + 1}`);
+
+          cb(null, `./uploads/jobInformation/${length + 1}`); // 파일 저장 경로 설정
         },
         filename: function (req, file, cb) {
           const filename = file.originalname;
@@ -35,6 +39,7 @@ export class JobController {
     }),
   )
   async inputJob(@UploadedFile() file: Express.Multer.File): Promise<void> {
+    this.jobService.receivedFile();
     // this.jobService.sendFile(file.originalname); // 인공지능 서버에 파일 전송
   }
 

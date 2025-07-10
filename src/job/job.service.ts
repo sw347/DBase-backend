@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import * as fs from 'fs';
-import { url } from 'inspector';
 
 @Injectable()
 export class JobService {
@@ -9,8 +8,11 @@ export class JobService {
     return `http://localhost:4433/uploads/${fileName}`;
   }
 
+  async receivedFile(): Promise<void> {}
+
   async sendFile(fileName: string) {
     try {
+      // 폴더 이름 저장하기 folderId
       const res = await axios.post('http://localhost:3000/api/process-pdf', {
         fileName,
       });
