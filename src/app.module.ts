@@ -10,6 +10,10 @@ import { SocialLoginEntity } from './user/entities/social-login.entity';
 import { UserTokenEntity } from './user/entities/user-token.entity';
 import { RoadmapModule } from './roadmap/roadmap.module';
 import { JobModule } from './job/job.module';
+import { ApplicationStatusEntity } from './job/entities/application-status.entity';
+import { CompanyInformationEntity } from './job/entities/company-information.entity';
+import { JobInformationEntity } from './job/entities/job-information.entity';
+import { PresentCompanyEntity } from './job/entities/present-company.entity';
 
 @Module({
   imports: [
@@ -23,7 +27,15 @@ import { JobModule } from './job/job.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DATABASE'),
-        entities: [UserEntity, SocialLoginEntity, UserTokenEntity],
+        entities: [
+          UserEntity,
+          SocialLoginEntity,
+          UserTokenEntity,
+          ApplicationStatusEntity,
+          CompanyInformationEntity,
+          JobInformationEntity,
+          PresentCompanyEntity,
+        ],
         synchronize: true, // true: 프로젝트 실행마다 Entity 생성, false: Entity 변경 시 수동으로 migration 필요
       }),
       inject: [ConfigService],
