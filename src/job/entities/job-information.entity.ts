@@ -23,7 +23,7 @@ export class JobInformationEntity {
   @JoinColumn({ name: 'company_id' })
   company: CompanyInformationEntity;
 
-  @Column({ name: 'job_title', type: 'text' })
+  @Column({ name: 'job_title', type: 'text', nullable: true })
   job_title: string;
 
   @Column({ name: 'recruitment_count', type: 'int' })
