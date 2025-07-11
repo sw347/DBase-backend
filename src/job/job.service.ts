@@ -18,7 +18,7 @@ export class JobService {
   ) {}
 
   async sendFile(fileName: string) {
-    const folderId = fs.readdirSync('uploads').length + 1; // 다른 방식 필요
+    const folderId = fs.readdirSync('uploads').length; // 다른 방식 필요
 
     try {
       // 폴더 이름 저장하기 folderId
