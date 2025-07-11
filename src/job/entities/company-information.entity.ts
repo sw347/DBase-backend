@@ -37,7 +37,6 @@ export class CompanyInformationEntity {
   @Column({ name: 'ai_analysis', type: 'text' })
   ai_analysis: string;
 
-  // 🔄 JobInformation과의 관계
   @OneToMany(() => JobInformationEntity, (job) => job.company)
   jobs: JobInformationEntity[];
 

@@ -3,13 +3,15 @@ import {
   Controller,
   Get,
   Post,
+  Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { JobService } from './job.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as fs from 'fs';
+import { Request } from 'express';
 
 @Controller('job')
 export class JobController {
@@ -17,13 +19,9 @@ export class JobController {
 
   @Post('/input')
   @UseInterceptors(
-    FileInterceptor('file', {
+    FilesInterceptor('file', 3, {
       storage: diskStorage({
         destination: function (req, file, cb) {
-          if (!fs.existsSync('./uploads')) {
-            fs.mkdirSync('./uploads', { recursive: true });
-          }
-
           if (!fs.existsSync('./uploads/jobInformation')) {
             fs.mkdirSync('./uploads/jobInformation', { recursive: true });
           }
@@ -46,12 +44,25 @@ export class JobController {
       }),
     }),
   )
-  async inputJob(@UploadedFile() file: Express.Multer.File) {
-    return this.jobService.sendFile(file.originalname); // 인공지능 서버에 파일 전송
+  async inputJob(
+    @UploadedFile()
+    files: {
+      file: Express.Multer.File;
+      etcFile: Express.Multer.File[];
+    },
+  ) {
+    return this.jobService.sendFile(files.file.originalname); // 인공지능 서버에 파일 전송
   }
 
   @Get()
   async findAll() {
     return this.jobService.findAll();
+  }
+
+  @Get('/company')
+  async getCompany(@Req() req: Request) {
+    const id: number = Number(req.query.id);
+
+    return this.jobService.findCompany(id);
   }
 }

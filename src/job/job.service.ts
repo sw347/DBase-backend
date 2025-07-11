@@ -4,8 +4,9 @@ import { JobInformationEntity } from './entities/job-information.entity';
 import { CompanyInformationEntity } from './entities/company-information.entity';
 import * as fs from 'fs';
 import { Repository } from 'typeorm';
-import { AIResponseDto } from './dto/job-posting.dto';
+import { AIResponseDto } from './dto/ai-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CompanysDto } from './dto/companys.dto';
 
 @Injectable()
 export class JobService {
@@ -62,6 +63,7 @@ export class JobService {
               main_business: company.main_business,
               website: company.website,
               address: company.address,
+              ai_analysis: company.ai_analysis, // AI 분석 결과
             },
             job_information: {
               job_title: job.job_title,
@@ -87,17 +89,23 @@ export class JobService {
   }
 
   async findAll() {
-    const uploadFilePath = 'uploads/jobInformation';
+    const companies = await this.companyInformationRepository.find();
 
-    if (!fs.existsSync(uploadFilePath)) {
-      return [];
+    if (!companies || companies.length === 0) {
+      return { success: false, message: '데이터가 비어있습니다.' };
     }
 
-    const files = fs.readdirSync(uploadFilePath);
+    const result: CompanysDto[] = companies as CompanysDto[];
 
-    return files.map((filename) => ({
-      filename,
-      url: this.uploadFileURL(filename),
-    }));
+    return result;
+  }
+
+  async findCompany(id: number) {
+    const company = await this.companyInformationRepository.findOne({
+      where: { id },
+      relations: ['jobs'],
+    });
+
+    return company;
   }
 }
