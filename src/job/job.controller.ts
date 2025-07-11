@@ -59,11 +59,17 @@ export class JobController {
   async inputJob(
     @UploadedFiles()
     files: {
-      file: Express.Multer.File;
+      file: Express.Multer.File[];
       etcFile: Express.Multer.File[];
     },
   ) {
-    return this.jobService.sendFile(files.file.originalname); // 인공지능 서버에 파일 전송
+    const pdfFile = files.file?.[0];
+
+    if (!pdfFile) {
+      throw new Error('PDF 파일 이름이 필요합니다.');
+    }
+
+    return this.jobService.sendFile(pdfFile.originalname); // 인공지능 서버에 파일 전송
   }
 
   @Get()
