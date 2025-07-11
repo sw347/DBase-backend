@@ -18,9 +18,7 @@ export class SocialLoginEntity {
   @Column({ name: 'identifier', type: 'varchar', length: 191, nullable: false })
   identifier: string;
 
-  @OneToOne(() => UserEntity, (user) => user.socialLogin, {
-    createForeignKeyConstraints: false,
-  })
+  @OneToOne(() => UserEntity, (user) => user.socialLogin)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 }

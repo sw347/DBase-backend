@@ -14,7 +14,7 @@ export class UserCompanyEntity {
   id: number;
 
   @Column({ name: 'user_id', type: 'int', unique: true })
-  user_id: number;
+  userId: number;
 
   @Column({ name: 'employment_status', type: 'varchar', length: 50 })
   employment_status: string;
@@ -22,16 +22,16 @@ export class UserCompanyEntity {
   @Column({ name: 'desired_position', type: 'varchar', length: 100 })
   desired_position: string;
 
-  @Column({ name: 'company_id', type: 'int' })
-  company_id: number;
+  @Column({ name: 'company_id', type: 'int', nullable: true })
+  company_id?: number;
 
-  @Column({ name: 'work_start_date', type: 'date' })
-  work_start_date: Date;
+  @Column({ name: 'work_start_date', type: 'date', nullable: true })
+  work_start_date?: Date;
 
-  @Column({ name: 'work_end_date', type: 'date' })
-  work_end_date: Date;
+  @Column({ name: 'work_end_date', type: 'date', nullable: true })
+  work_end_date?: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.id, {
+  @ManyToOne(() => UserEntity, (user) => user.company, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })

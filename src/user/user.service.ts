@@ -69,7 +69,7 @@ export class UserService {
       });
 
       await qr.manager.insert(UserCompanyEntity, {
-        user_id: userId,
+        userId: userId,
         employment_status: '구직중',
         desired_position: '',
         company_id: null,

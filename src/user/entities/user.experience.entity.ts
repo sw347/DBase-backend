@@ -13,19 +13,13 @@ export class UserExperienceEntity {
   id: number;
 
   @Column({ name: 'user_id', type: 'int' })
-  user_id: number;
-
-  @ManyToOne(() => UserEntity, (user) => user.experiences, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'user_id' })
-  user: UserEntity;
+  userId: number;
 
   @Column({ name: 'type', type: 'varchar', length: 50 })
   type: string;
 
   @Column({ name: 'date', type: 'date', nullable: true })
-  date: Date;
+  date?: Date;
 
   @Column({ name: 'name', type: 'varchar', length: 255 })
   name: string;
@@ -34,8 +28,14 @@ export class UserExperienceEntity {
   description: string;
 
   @Column({ name: 'skills', type: 'text', nullable: true })
-  skills: string;
+  skills?: string;
 
   @Column({ name: 'url', type: 'varchar', length: 1024, nullable: true })
-  url: string;
+  url?: string;
+
+  @ManyToOne(() => UserEntity, (user) => user.experiences, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user: UserEntity;
 }
