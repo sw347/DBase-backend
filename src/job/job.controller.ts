@@ -35,7 +35,7 @@ export class JobController {
             });
           }
 
-          cb(null, `./uploads/jobInformation/${length + 1}`); // 파일 저장 경로 설정
+          cb(null, `./uploads/${length + 1}`); // 파일 저장 경로 설정
         },
         filename: function (req, file, cb) {
           const filename = file.originalname;
