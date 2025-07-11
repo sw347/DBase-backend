@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ApplyService } from './apply.service';
 import { ApplyController } from './apply.controller';
-import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
-import { UserService } from 'src/user/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from 'src/user/entities/user.entity';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports: [JwtAuthGuard, UserService, TypeOrmModule.forFeature([UserEntity])],
+  imports: [UserModule, TypeOrmModule.forFeature([UserEntity])],
   controllers: [ApplyController],
   providers: [ApplyService],
 })

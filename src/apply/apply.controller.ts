@@ -4,11 +4,9 @@ import {
   Post,
   Req,
   UploadedFiles,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApplyService } from './apply.service';
-import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Request } from 'express';
@@ -18,7 +16,6 @@ export class ApplyController {
   constructor(private readonly applyService: ApplyService) {}
 
   @Post('/input')
-  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileFieldsInterceptor(
       [
