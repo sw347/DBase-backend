@@ -40,7 +40,7 @@ export class JobController {
 
             const length = fs.readdirSync('./uploads').length;
 
-            const dir = `./uploads/${length + 1}`;
+            const dir = `./uploads/${length}`;
             if (!fs.existsSync(dir)) {
               fs.mkdirSync(dir, {
                 recursive: true,
