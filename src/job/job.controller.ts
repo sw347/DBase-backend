@@ -5,6 +5,7 @@ import {
   Post,
   Req,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { JobService } from './job.service';
@@ -22,14 +23,14 @@ export class JobController {
     FilesInterceptor('file', 3, {
       storage: diskStorage({
         destination: function (req, file, cb) {
-          if (!fs.existsSync('./uploads/jobInformation')) {
-            fs.mkdirSync('./uploads/jobInformation', { recursive: true });
+          if (!fs.existsSync('./uploads')) {
+            fs.mkdirSync('./uploads', { recursive: true });
           }
 
-          const length = fs.readdirSync('./uploads/jobInformation').length;
+          const length = fs.readdirSync('./uploads').length;
 
-          if (!fs.existsSync(`./uploads/jobInformation/${length + 1}`)) {
-            fs.mkdirSync(`./uploads/jobInformation/${length + 1}`, {
+          if (!fs.existsSync(`./uploads/${length + 1}`)) {
+            fs.mkdirSync(`./uploads/${length + 1}`, {
               recursive: true,
             });
           }
@@ -45,7 +46,7 @@ export class JobController {
     }),
   )
   async inputJob(
-    @UploadedFile()
+    @UploadedFiles()
     files: {
       file: Express.Multer.File;
       etcFile: Express.Multer.File[];

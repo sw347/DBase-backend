@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import { Repository } from 'typeorm';
 import { AIResponseDto } from './dto/ai-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CompanysDto } from './dto/companys.dto';
+import { CompanysDto } from './dto/company.dto';
 
 @Injectable()
 export class JobService {

@@ -14,6 +14,7 @@ import { ApplicationStatusEntity } from './job/entities/application-status.entit
 import { CompanyInformationEntity } from './job/entities/company-information.entity';
 import { JobInformationEntity } from './job/entities/job-information.entity';
 import { PresentCompanyEntity } from './job/entities/present-company.entity';
+import { ApplyModule } from './apply/apply.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { PresentCompanyEntity } from './job/entities/present-company.entity';
     AuthModule,
     RoadmapModule,
     JobModule,
+    ApplyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
