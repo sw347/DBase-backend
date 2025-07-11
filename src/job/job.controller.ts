@@ -9,7 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { JobService } from './job.service';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as fs from 'fs';
 import { Request } from 'express';
@@ -20,30 +20,41 @@ export class JobController {
 
   @Post('/input')
   @UseInterceptors(
-    FilesInterceptor('file', 3, {
-      storage: diskStorage({
-        destination: function (req, file, cb) {
-          if (!fs.existsSync('./uploads')) {
-            fs.mkdirSync('./uploads', { recursive: true });
-          }
-
-          const length = fs.readdirSync('./uploads').length;
-
-          if (!fs.existsSync(`./uploads/${length + 1}`)) {
-            fs.mkdirSync(`./uploads/${length + 1}`, {
-              recursive: true,
-            });
-          }
-
-          cb(null, `./uploads/${length + 1}`); // 파일 저장 경로 설정
+    FileFieldsInterceptor(
+      [
+        {
+          name: 'file',
+          maxCount: 1,
         },
-        filename: function (req, file, cb) {
-          const filename = file.originalname;
-
-          cb(null, filename);
+        {
+          name: 'etcFile',
+          maxCount: 2,
         },
-      }),
-    }),
+      ],
+      {
+        storage: diskStorage({
+          destination: function (req, file, cb) {
+            if (!fs.existsSync('./uploads')) {
+              fs.mkdirSync('./uploads', { recursive: true });
+            }
+
+            const length = fs.readdirSync('./uploads').length;
+
+            const dir = `./uploads/${length + 1}`;
+            if (!fs.existsSync(dir)) {
+              fs.mkdirSync(dir, {
+                recursive: true,
+              });
+            }
+
+            cb(null, dir); // 파일 저장 경로 설정
+          },
+          filename: function (req, file, cb) {
+            cb(null, file.originalname);
+          },
+        }),
+      },
+    ),
   )
   async inputJob(
     @UploadedFiles()
