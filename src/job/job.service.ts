@@ -4,9 +4,16 @@ import { JobInformationEntity } from './entities/job-information.entity';
 import { CompanyInformationEntity } from './entities/company-information.entity';
 import * as fs from 'fs';
 import { Repository } from 'typeorm';
-import { AIResponseDto } from './dto/ai-response.dto';
+import {
+  AIResponseDto,
+  CompanyInformationDto,
+  JobInformationDto,
+} from './dto/ai-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanysDto } from './dto/company.dto';
+import { EmployedCompanyDto } from './dto/employed-company.dto';
+import { plainToInstance } from 'class-transformer';
+import { PresentCompanyEntity } from './entities/present-company.entity';
 
 @Injectable()
 export class JobService {
@@ -15,6 +22,8 @@ export class JobService {
     private readonly jobInformationRepository: Repository<JobInformationEntity>,
     @InjectRepository(CompanyInformationEntity)
     private readonly companyInformationRepository: Repository<CompanyInformationEntity>,
+    @InjectRepository(PresentCompanyEntity)
+    private readonly presentCompanyRepository: Repository<PresentCompanyEntity>,
   ) {}
 
   async sendFile(fileName: string) {
@@ -28,8 +37,8 @@ export class JobService {
           fileName,
         })
         .then(async (response) => {
-          // console.log('AI 서버로부터 메시지 응답:', response.data.message);
-          // console.log('AI 서버로부터 상태 응답:', response.data.status);
+          //   console.log('AI 서버로부터 메시지 응답:', response.data.message);
+          console.log('AI 서버로부터 상태 응답:', response.data.status);
 
           if (response.data.status !== 'success') {
             return { success: false, message: response.data.message };
@@ -50,28 +59,24 @@ export class JobService {
             };
           }
 
+          const companyInformation: CompanyInformationDto = plainToInstance(
+            CompanyInformationDto,
+            company,
+            {
+              excludeExtraneousValues: true,
+            },
+          );
+          const jobInformation: JobInformationDto = plainToInstance(
+            JobInformationDto,
+            job,
+            {
+              excludeExtraneousValues: true,
+            },
+          );
+
           const result: AIResponseDto = {
-            company_information: {
-              company_name: company.company_name,
-              year: company.year,
-              business_type: company.business_type,
-              employee_count: company.employee_count,
-              main_business: company.main_business,
-              website: company.website,
-              address: company.address,
-              ai_analysis: company.ai_analysis, // AI 분석 결과
-            },
-            job_information: {
-              job_title: job.job_title,
-              recruitment_count: job.recruitment_count,
-              job_description: job.job_description,
-              qualifications: job.qualifications,
-              working_hours: job.working_hours,
-              work_type: job.work_type,
-              internship_pay: job.internship_pay,
-              salary: job.salary,
-              additional_requirements: job.additional_requirements,
-            },
+            company_information: companyInformation,
+            job_information: jobInformation,
           };
 
           return result;
@@ -103,5 +108,23 @@ export class JobService {
     });
 
     return company;
+  }
+
+  async findPinnedCompany(id: number) {
+    const company = await this.companyInformationRepository.findOne({
+      where: { id },
+    });
+
+    if (!company) return null;
+
+    const result: EmployedCompanyDto = plainToInstance(
+      EmployedCompanyDto,
+      company,
+      { excludeExtraneousValues: true },
+    );
+  }
+
+  async findAllEmployedStatus() {
+    return this.presentCompanyRepository.find();
   }
 }

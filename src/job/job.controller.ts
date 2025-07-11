@@ -1,10 +1,8 @@
 import {
-  Body,
   Controller,
   Get,
   Post,
   Req,
-  UploadedFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -82,5 +80,25 @@ export class JobController {
     const id: number = Number(req.query.id);
 
     return this.jobService.findCompany(id);
+  }
+
+  @Get('/company/pin')
+  async getPinnedCompany(@Req() req: Request) {
+    const id: number = Number(req.query.id);
+
+    return this.jobService.findPinnedCompany(id);
+  }
+
+  // 취업 중인 회사 중 1개
+  // @Get('/company')
+  // async employedStatus(@Req() req: Request) {
+  //   const userId: number = Number(req.query.userId);
+
+  //   return this.jobService.findEmployedStatus(userId);
+  // }
+
+  @Get('/company/employed')
+  async getAllEmployedStatus() {
+    return this.jobService.findAllEmployedStatus();
   }
 }

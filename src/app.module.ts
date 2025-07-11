@@ -15,6 +15,8 @@ import { CompanyInformationEntity } from './job/entities/company-information.ent
 import { JobInformationEntity } from './job/entities/job-information.entity';
 import { PresentCompanyEntity } from './job/entities/present-company.entity';
 import { ApplyModule } from './apply/apply.module';
+import { UserExperienceEntity } from './user/entities/user.experience.entity';
+import { UserCompanyEntity } from './user/entities/user.company.entity';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { ApplyModule } from './apply/apply.module';
           CompanyInformationEntity,
           JobInformationEntity,
           PresentCompanyEntity,
+          UserExperienceEntity,
+          UserCompanyEntity,
         ],
         synchronize: true, // true: 프로젝트 실행마다 Entity 생성, false: Entity 변경 시 수동으로 migration 필요
       }),

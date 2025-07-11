@@ -1,5 +1,14 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { SocialLoginEntity } from './social-login.entity';
+import { UserCompanyEntity } from './user.company.entity';
+import { ApplicationStatusEntity } from 'src/job/entities/application-status.entity';
+import { UserExperienceEntity } from './user.experience.entity';
 
 @Entity({ name: 'user', database: 'DBase' })
 export class UserEntity {
@@ -17,20 +26,53 @@ export class UserEntity {
   @Column({ name: 'email', type: 'varchar', length: 191, unique: true })
   email: string;
 
-  // @Column({ name: 'phone_number', type: 'varchar', unique: true })
-  // phoneNumber?: string;
+  @Column({
+    name: 'phone_number',
+    type: 'varchar',
+    unique: true,
+    nullable: true,
+  })
+  phone_number?: string;
 
-  // @Column({ name: 'address', type: 'varchar', length: 191 })
-  // address?: string;
+  @Column({ name: 'address', type: 'varchar', length: 191, nullable: true })
+  address?: string;
 
   @Column({ name: 'role', type: 'varchar' })
-  role: string;
+  category: string;
 
-  @Column({ name: 'created_at', type: 'bigint', nullable: false })
-  createdAt: number;
+  @Column({ name: 'affiliation', type: 'varchar', length: 191, nullable: true })
+  affiliation?: string;
+
+  @Column({ name: 'skills', type: 'text', nullable: true })
+  skills?: string;
+
+  @OneToOne(() => UserCompanyEntity, (company) => company.user, {
+    cascade: true,
+  })
+  company: UserCompanyEntity;
+
+  @OneToMany(() => UserExperienceEntity, (experience) => experience.user, {
+    cascade: true,
+  })
+  experiences: UserExperienceEntity[];
+
+  @OneToMany(
+    () => ApplicationStatusEntity,
+    (application) => application.user_id,
+    {
+      cascade: true,
+    },
+  )
+  applications: ApplicationStatusEntity[];
 
   @OneToOne(() => SocialLoginEntity, (socialLogin) => socialLogin.user, {
     createForeignKeyConstraints: false,
   })
   socialLogin: SocialLoginEntity;
+
+  @OneToOne(() => UserCompanyEntity, (uc) => uc.user)
+  userCompany: UserCompanyEntity;
+
+  @Column({ name: 'created_at', type: 'bigint', nullable: false })
+  createdAt: number;
 }

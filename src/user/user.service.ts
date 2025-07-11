@@ -9,6 +9,7 @@ import { SocialLoginEntity } from './entities/social-login.entity';
 import { LoginException } from 'src/auth/exception/login.exception';
 import { OauthUserDto } from 'src/auth/dto/oauth-user.dto';
 import { hash } from 'argon2';
+import { UserCompanyEntity } from './entities/user.company.entity';
 
 @Injectable()
 export class UserService {
@@ -48,17 +49,15 @@ export class UserService {
     await qr.startTransaction();
 
     let userId = 0;
-    let role = 'stu';
+    let category = 'student';
 
     try {
-      if (!oauthUser.email.startsWith('sdh')) {
-        role = 'tea';
-      }
+      if (!oauthUser.email.startsWith('sdh')) category = 'teacher';
 
       const result = await qr.manager.insert(UserEntity, {
         name: oauthUser.name,
         email: oauthUser.email,
-        role: role,
+        category: category,
         createdAt: now,
       });
 
@@ -67,6 +66,15 @@ export class UserService {
       await qr.manager.insert(SocialLoginEntity, {
         identifier: oauthUser.identifier,
         userId,
+      });
+
+      await qr.manager.insert(UserCompanyEntity, {
+        user_id: userId,
+        employment_status: '구직중',
+        desired_position: '',
+        company_id: null,
+        work_start_date: null,
+        work_end_date: null,
       });
 
       await qr.commitTransaction();
@@ -84,7 +92,7 @@ export class UserService {
       id: userId,
       name: oauthUser.name,
       email: oauthUser.email,
-      role: role,
+      category: category,
       createdAt: now,
     });
   }
