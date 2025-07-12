@@ -67,7 +67,9 @@ export class JobController {
       throw new Error('PDF 파일 이름이 필요합니다.');
     }
 
-    return this.jobService.sendFile(pdfFile.originalname); // 인공지능 서버에 파일 전송
+    const pdfFileName = Buffer.from(pdfFile.originalname, 'utf8').toString();
+
+    return this.jobService.sendFile(pdfFileName); // 인공지능 서버에 파일 전송
   }
 
   @Get()
