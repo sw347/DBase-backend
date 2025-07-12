@@ -58,12 +58,6 @@ export class ApplyService {
       return newPath;
     };
 
-    const savedFiles = {
-      resume: files.resume?.[0] ? moveFile(files.resume[0]) : null,
-      portfolio: files.portfolio?.[0] ? moveFile(files.portfolio[0]) : null,
-      etcFiles: files.etcFile?.map((file) => moveFile(file)) ?? [],
-    };
-
     const resumePath = files.resume?.[0] ? moveFile(files.resume[0]) : null;
     const portfolioPath = files.portfolio?.[0]
       ? moveFile(files.portfolio[0])

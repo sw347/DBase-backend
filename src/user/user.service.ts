@@ -6,7 +6,6 @@ import { UserEntity } from './entities/user.entity';
 import { UserTokenEntity } from './entities/user-token.entity';
 import { ConfigService } from '@nestjs/config';
 import { SocialLoginEntity } from './entities/social-login.entity';
-import { LoginException } from 'src/auth/exception/login.exception';
 import { OauthUserDto } from 'src/auth/dto/oauth-user.dto';
 import { hash } from 'argon2';
 import { UserCompanyEntity } from './entities/user.company.entity';

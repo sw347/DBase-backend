@@ -79,6 +79,11 @@ export class JobService {
             job_information: jobInformation,
           };
 
+          await this.presentCompanyRepository.save({
+            company_id: company.id,
+            company: company,
+          });
+
           return result;
         })
         .catch((error) => {
