@@ -48,7 +48,7 @@ export class JobInformationEntity {
   salary: string;
 
   @Column({ name: 'additional_requirements', type: 'text' })
-  additional_requirements: string;
+  additional_requirements?: string;
 
   @OneToMany(() => ApplicationStatusEntity, (application) => application.job, {
     cascade: true,

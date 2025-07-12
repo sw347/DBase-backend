@@ -23,7 +23,7 @@ export class UserProfileDto {
   skills: string;
 
   @Expose()
-  porfolio_url: string;
+  github_url?: string;
 }
 
 export class CompanyDto {

@@ -29,7 +29,7 @@ export class CompanyInformationEntity {
   main_business: string;
 
   @Column({ name: 'website', type: 'varchar', length: 512, nullable: true })
-  website: string;
+  website?: string;
 
   @Column({ name: 'address', type: 'text' })
   address: string;

@@ -183,25 +183,17 @@ export class UserService {
 
     if (!userData) throw new Error('사용자를 찾을 수 없습니다.');
 
-    console.log(userData);
-
     const user = plainToInstance(UserProfileDto, userData, {
       excludeExtraneousValues: true,
     });
-
-    console.log(user);
 
     const company = plainToInstance(CompanyDto, userData.company, {
       excludeExtraneousValues: true,
     });
 
-    console.log(company);
-
     const experiences = (userData.experiences || []).map((exp) =>
       plainToInstance(ExperiencesDto, exp, { excludeExtraneousValues: true }),
     );
-
-    console.log(experiences);
 
     const result: PersonalProfileDto = {
       user_profile: user,
@@ -237,6 +229,8 @@ export class UserService {
 
     userCompany.employment_status = dto.status;
     userCompany.company_id = company.id;
+    userCompany.work_start_date = dto.work_start_date;
+    userCompany.work_end_date = dto.work_end_date;
     await this.userCompanyRepository.save(userCompany);
 
     if (dto.status === '구직중') {
