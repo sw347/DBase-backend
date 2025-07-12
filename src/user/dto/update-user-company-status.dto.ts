@@ -1,6 +1,7 @@
 export class UpdateUserCompanyStatusDto {
-  companyName: string;
-  status: string;
+  company_name: string;
+  employment_status: string;
+  desired_position: string;
   work_start_date?: String;
   work_end_date?: String;
 }

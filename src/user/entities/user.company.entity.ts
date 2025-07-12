@@ -20,15 +20,18 @@ export class UserCompanyEntity {
   employment_status: string;
 
   @Column({ name: 'desired_position', type: 'varchar', length: 100 })
-  desired_position: string;
+  desired_position?: string;
 
   @Column({ name: 'company_id', type: 'int', nullable: true })
   company_id: number;
 
-  @Column({ name: 'work_start_date', type: 'date', nullable: true })
+  @Column({ nullable: true })
+  company_name: string;
+
+  @Column({ name: 'work_start_date', type: 'varchar', nullable: true })
   work_start_date?: String;
 
-  @Column({ name: 'work_end_date', type: 'date', nullable: true })
+  @Column({ name: 'work_end_date', type: 'varchar', nullable: true })
   work_end_date?: String;
 
   @ManyToOne(() => UserEntity, (user) => user.company, {

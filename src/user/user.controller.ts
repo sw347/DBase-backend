@@ -39,12 +39,14 @@ export class UserController {
     return await this.userService.updateUserProfile(user.id, updateUserDto);
   }
 
+  // 여기
   @Patch('/profile/update-status')
   @UseGuards(JwtAuthGuard)
   async updateUserProfileStatus(
     @User() user: UserEntity,
     @Body() body: UpdateUserCompanyStatusDto,
   ) {
+    console.log(body);
     return await this.userService.updateUserCompanyStatus(user.id, body);
   }
 

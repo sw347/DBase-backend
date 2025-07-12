@@ -43,8 +43,6 @@ export class UserService {
     private readonly presentCompanyRepository: Repository<PresentCompanyEntity>,
     @InjectRepository(UserExperienceEntity)
     private readonly userExperienceRepository: Repository<UserExperienceEntity>,
-
-    private readonly configService: ConfigService,
   ) {}
 
   async findUserByIdentifier(identifier: string) {
@@ -73,7 +71,8 @@ export class UserService {
     let category = 'student';
 
     try {
-      if (!oauthUser.email.startsWith('sdh')) category = 'teacher';
+      if (oauthUser.email == 'sdh230304@sdh.hs.kr') category = 'teacher';
+      else if (!oauthUser.email.startsWith('sdh')) category = 'teacher';
 
       const result = await qr.manager.insert(UserEntity, {
         name: oauthUser.name,
@@ -161,7 +160,6 @@ export class UserService {
 
       user.phone_number = updateUserDto.phone_number;
       user.address = updateUserDto.address;
-      user.category = updateUserDto.category;
       user.affiliation = updateUserDto.affiliation;
 
       await this.userRepository.save(user);
@@ -208,12 +206,18 @@ export class UserService {
     userId: number,
     dto: UpdateUserCompanyStatusDto,
   ) {
-    const company = await this.companyInformationRepository.findOne({
-      where: { company_name: dto.companyName },
+    let company = await this.companyInformationRepository.findOne({
+      where: { company_name: dto.company_name },
     });
 
     if (!company) {
       throw new Error('해당 회사가 존재하지 않습니다.');
+    }
+
+    if (!company) {
+      company = await this.companyInformationRepository.save({
+        company_name: dto.company_name,
+      });
     }
 
     const userCompany = await this.userCompanyRepository.findOne({
@@ -227,13 +231,15 @@ export class UserService {
       throw new Error('해당 유저의 회사 정보가 없습니다.');
     }
 
-    userCompany.employment_status = dto.status;
+    userCompany.company_name = dto.company_name;
+    userCompany.employment_status = dto.employment_status;
+    userCompany.desired_position = dto.desired_position;
     userCompany.company_id = company.id;
     userCompany.work_start_date = dto.work_start_date;
     userCompany.work_end_date = dto.work_end_date;
     await this.userCompanyRepository.save(userCompany);
 
-    if (dto.status === '구직중') {
+    if (dto.employment_status === '구직중') {
       const alreadyExists = await this.presentCompanyRepository.findOne({
         where: { company_id: company.id },
       });
@@ -245,6 +251,7 @@ export class UserService {
         });
       }
     }
+
     return { success: true, message: '업데이트 완료' };
   }
 
