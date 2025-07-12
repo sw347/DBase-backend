@@ -17,6 +17,12 @@ export class UserController {
     return { id: user.id, name: user.name, createdAt: user.createdAt };
   }
 
+  @Get('/profile/personal')
+  @UseGuards(JwtAuthGuard)
+  async getUserProfileExists(@User() user: UserEntity) {
+    return await this.userService.getUserPersonalProfile(user.id);
+  }
+
   @Patch('/profile/update')
   @UseGuards(JwtAuthGuard)
   async updateUserProfile(

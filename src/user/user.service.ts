@@ -127,10 +127,9 @@ export class UserService {
   async findOneById(identifier: string) {
     const social = await this.socialLoginRepo.findOne({
       where: { identifier },
-      relations: ['user'],
     });
 
-    return social?.user;
+    return await this.userRepository.findOne({ where: { id: social.userId } });
   }
 
   async updateUserProfile(userId: number, updateUserDto: UpdateUserProfileDto) {
@@ -155,4 +154,6 @@ export class UserService {
       };
     }
   }
+
+  async getUserPersonalProfile(userId: number) {}
 }
