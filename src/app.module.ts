@@ -17,6 +17,7 @@ import { PresentCompanyEntity } from './job/entities/present-company.entity';
 import { ApplyModule } from './apply/apply.module';
 import { UserExperienceEntity } from './user/entities/user.experience.entity';
 import { UserCompanyEntity } from './user/entities/user.company.entity';
+import { ApplicationFileEntity } from './apply/entities/application-file.entity';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { UserCompanyEntity } from './user/entities/user.company.entity';
           SocialLoginEntity,
           UserTokenEntity,
           ApplicationStatusEntity,
+          ApplicationFileEntity,
           CompanyInformationEntity,
           JobInformationEntity,
           PresentCompanyEntity,
