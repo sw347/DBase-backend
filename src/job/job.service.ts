@@ -131,7 +131,14 @@ export class JobService {
   }
 
   async findAllEmployedStatus() {
-    return this.presentCompanyRepository.find();
+    return this.presentCompanyRepository.find({
+      relations: ['company'],
+      select: {
+        company: {
+          address: true,
+        },
+      },
+    });
   }
 
   async updateCompanyAndJob(@Body() body: UpdateCompanyDto) {
