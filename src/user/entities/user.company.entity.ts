@@ -23,13 +23,13 @@ export class UserCompanyEntity {
   desired_position: string;
 
   @Column({ name: 'company_id', type: 'int', nullable: true })
-  company_id?: number;
+  company_id: number;
 
   @Column({ name: 'work_start_date', type: 'date', nullable: true })
-  work_start_date?: Date;
+  work_start_date?: String;
 
   @Column({ name: 'work_end_date', type: 'date', nullable: true })
-  work_end_date?: Date;
+  work_end_date?: String;
 
   @ManyToOne(() => UserEntity, (user) => user.company, {
     onDelete: 'CASCADE',
