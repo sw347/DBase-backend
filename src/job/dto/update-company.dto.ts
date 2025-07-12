@@ -1,4 +1,3 @@
-import { Expose } from 'class-transformer';
 import { CompanyInformationDto } from './ai-response.dto';
 import { JobInformationDto } from './ai-response.dto';
 

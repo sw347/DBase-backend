@@ -1,3 +1,4 @@
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 import { DateTime } from 'luxon';
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
@@ -123,13 +124,35 @@ export class UserService {
     return await hash(token, { raw: false });
   }
 
-  async findOneById(userId: string) {
-    const user = await this.socialLoginRepo.findOne({
-      where: { identifier: userId },
+  async findOneById(identifier: string) {
+    const social = await this.socialLoginRepo.findOne({
+      where: { identifier },
+      relations: ['user'],
     });
 
-    return await this.userRepository.findOne({
-      where: { id: user.id },
-    });
+    return social?.user;
+  }
+
+  async updateUserProfile(userId: number, updateUserDto: UpdateUserProfileDto) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+      });
+
+      user.phone_number = updateUserDto.phone_number;
+      user.address = updateUserDto.address;
+      user.category = updateUserDto.category;
+      user.affiliation = updateUserDto.affiliation;
+      user.skills = updateUserDto.skills;
+
+      await this.userRepository.save(user);
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        message: '프로필 업데이트에 실패했습니다.',
+      };
+    }
   }
 }

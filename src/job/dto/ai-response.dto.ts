@@ -59,9 +59,6 @@ export class CompanyInformationDto {
 
   @Expose()
   address: string;
-
-  @Expose()
-  ai_analysis: string; // AI 분석 결과를 저장하는 필드
 }
 
 export class AIResponseDto {
