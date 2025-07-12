@@ -155,5 +155,12 @@ export class UserService {
     }
   }
 
-  async getUserPersonalProfile(userId: number) {}
+  async getUserPersonalProfile(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['company', 'experiences'],
+    });
+
+    console.log(user);
+  }
 }

@@ -28,7 +28,6 @@ export class UserController {
   async updateUserProfile(
     @User() user: UserEntity,
     @Body() updateUserDto: UpdateUserProfileDto,
-    @Res() res: Response,
   ) {
     return await this.userService.updateUserProfile(user.id, updateUserDto);
   }

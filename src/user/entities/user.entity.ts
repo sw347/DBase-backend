@@ -70,10 +70,11 @@ export class UserEntity {
 
   @OneToOne(() => SocialLoginEntity, (socialLogin) => socialLogin.user, {
     createForeignKeyConstraints: false,
+    cascade: true,
   })
   socialLogin: SocialLoginEntity;
 
-  @OneToOne(() => UserCompanyEntity, (uc) => uc.user)
+  @OneToOne(() => UserCompanyEntity, (uc) => uc.user, { cascade: true })
   userCompany: UserCompanyEntity;
 
   @Column({ name: 'created_at', type: 'bigint', nullable: false })
