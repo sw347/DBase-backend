@@ -20,6 +20,9 @@ import {
   PersonalProfileDto,
   UserProfileDto,
 } from './dto/personal-profile.dto';
+import { UpdateSkillsDto } from './dto/update-skills.dto';
+import { UpdateExperienceDto } from './dto/update-experience.dto';
+import { UserExperienceEntity } from './entities/user.experience.entity';
 
 @Injectable()
 export class UserService {
@@ -38,6 +41,8 @@ export class UserService {
     private readonly userCompanyRepository: Repository<UserCompanyEntity>,
     @InjectRepository(PresentCompanyEntity)
     private readonly presentCompanyRepository: Repository<PresentCompanyEntity>,
+    @InjectRepository(UserExperienceEntity)
+    private readonly userExperienceRepository: Repository<UserExperienceEntity>,
 
     private readonly configService: ConfigService,
   ) {}
@@ -158,7 +163,6 @@ export class UserService {
       user.address = updateUserDto.address;
       user.category = updateUserDto.category;
       user.affiliation = updateUserDto.affiliation;
-      user.skills = updateUserDto.skills;
 
       await this.userRepository.save(user);
 
@@ -248,5 +252,26 @@ export class UserService {
       }
     }
     return { success: true, message: '업데이트 완료' };
+  }
+
+  async updateUserSkillsStatus(userId: number, dto: UpdateSkillsDto) {
+    const userData = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    userData.skills = dto.skills;
+
+    await this.userRepository.save(userData);
+  }
+
+  async updateUserExperience(userId: number, dto: UpdateExperienceDto) {
+    const newExperience = this.userExperienceRepository.create({
+      ...dto,
+      userId,
+    });
+
+    const result = await this.userExperienceRepository.save(newExperience);
+
+    return { success: true, data: result };
   }
 }

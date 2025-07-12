@@ -15,7 +15,4 @@ export class UpdateUserProfileDto {
 
   @Expose()
   affiliation: string;
-
-  @Expose()
-  skills: string;
 }

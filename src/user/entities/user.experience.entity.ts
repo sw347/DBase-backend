@@ -16,7 +16,7 @@ export class UserExperienceEntity {
   userId: number;
 
   @Column({ name: 'type', type: 'varchar', length: 50 })
-  type: string;
+  type: string; // project, experience, award
 
   @Column({ name: 'date', type: 'varchar', length: 50, nullable: true })
   date?: String;

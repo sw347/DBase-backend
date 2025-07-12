@@ -4,9 +4,10 @@ import { User } from './decorator/user.decorator';
 import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { UserProfileDto } from './dto/user-profile.dto';
-import { Response } from 'express';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 import { UpdateUserCompanyStatusDto } from './dto/update-user-company-status.dto';
+import { UpdateSkillsDto } from './dto/update-skills.dto';
+import { UpdateExperienceDto } from './dto/update-experience.dto';
 
 @Controller('user')
 export class UserController {
@@ -40,5 +41,23 @@ export class UserController {
     @Body() body: UpdateUserCompanyStatusDto,
   ) {
     return await this.userService.updateUserCompanyStatus(user.id, body);
+  }
+
+  @Patch('/profile/update-skills')
+  @UseGuards(JwtAuthGuard)
+  async updateUserProfileSkills(
+    @User() user: UserEntity,
+    @Body() body: UpdateSkillsDto,
+  ) {
+    return await this.userService.updateUserSkillsStatus(user.id, body);
+  }
+
+  @Patch('/profile/update-exp')
+  @UseGuards(JwtAuthGuard)
+  async updateUserExperience(
+    @User() user: UserEntity,
+    @Body() body: UpdateExperienceDto,
+  ) {
+    return await this.userService.updateUserExperience(user.id, body);
   }
 }
