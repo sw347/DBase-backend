@@ -32,66 +32,67 @@ export class JobService {
 
     try {
       // 폴더 이름 저장하기 folderId
-      await axios
-        .post('http://localhost:3000/api/process-pdf', {
+      const response = await axios.post(
+        'http://localhost:3000/api/process-pdf',
+        {
           folderId,
           fileName,
-        })
-        .then(async (response) => {
-          //   console.log('AI 서버로부터 메시지 응답:', response.data.message);
-          console.log('AI 서버로부터 상태 응답:', response.data.status);
+        },
+      );
 
-          if (response.data.status !== 'success') {
-            return { success: false, message: response.data.message };
-          }
+      console.log('AI 서버로부터 상태 응답:', response.data.status);
 
-          const company = await this.companyInformationRepository.findOne({
-            where: { id: folderId },
-          });
+      if (response.data.status !== 'success') {
+        return { success: false, message: response.data.message };
+      }
 
-          const job = await this.jobInformationRepository.findOne({
-            where: { company_id: folderId },
-          });
+      const company = await this.companyInformationRepository.findOne({
+        where: { id: folderId },
+      });
 
-          if (!company || !job) {
-            return {
-              success: false,
-              message: 'company와 job 데이터가 비어있습니다.',
-            };
-          }
+      const job = await this.jobInformationRepository.findOne({
+        where: { company_id: folderId },
+      });
 
-          const companyInformation: CompanyInformationDto = plainToInstance(
-            CompanyInformationDto,
-            company,
-            {
-              excludeExtraneousValues: true,
-            },
-          );
-          const jobInformation: JobInformationDto = plainToInstance(
-            JobInformationDto,
-            job,
-            {
-              excludeExtraneousValues: true,
-            },
-          );
+      if (!company || !job) {
+        return {
+          success: false,
+          message: 'company와 job 데이터가 비어있습니다.',
+        };
+      }
 
-          const result: AIResponseDto = {
-            company_information: companyInformation,
-            job_information: jobInformation,
-          };
+      const companyInformation: CompanyInformationDto = plainToInstance(
+        CompanyInformationDto,
+        company,
+        {
+          excludeExtraneousValues: true,
+        },
+      );
+      const jobInformation: JobInformationDto = plainToInstance(
+        JobInformationDto,
+        job,
+        {
+          excludeExtraneousValues: true,
+        },
+      );
 
-          await this.presentCompanyRepository.save({
-            company_id: company.id,
-            company: company,
-          });
+      const result: AIResponseDto = {
+        company_information: companyInformation,
+        job_information: jobInformation,
+      };
 
-          return result;
-        })
-        .catch((error) => {
-          console.error('Error processing PDF:', error);
-        });
+      await this.presentCompanyRepository.save({
+        company_id: company.id,
+        company: company,
+      });
+
+      return result;
     } catch (error) {
       console.error('Error sending file:', error);
+      return {
+        success: false,
+        message: '서버 오류가 발생했습니다.',
+      };
     }
   }
 
