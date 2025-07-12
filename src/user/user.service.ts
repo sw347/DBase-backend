@@ -173,6 +173,35 @@ export class UserService {
     }
   }
 
+  async getPersonalUserData(id: string) {
+    const userData = await this.userRepository.findOne({
+      where: { id: Number(id) },
+      relations: ['company', 'experiences'],
+    });
+
+    console.log(userData);
+
+    const user = plainToInstance(UserProfileDto, userData, {
+      excludeExtraneousValues: true,
+    });
+
+    const company = plainToInstance(CompanyDto, userData.company, {
+      excludeExtraneousValues: true,
+    });
+
+    const experiences = (userData.experiences || []).map((exp) =>
+      plainToInstance(ExperiencesDto, exp, { excludeExtraneousValues: true }),
+    );
+
+    const result: PersonalProfileDto = {
+      user_profile: user,
+      company: company,
+      experiences: experiences,
+    };
+
+    return result;
+  }
+
   async getUserPersonalProfile(userId: number) {
     const userData = await this.userRepository.findOne({
       where: { id: userId },
@@ -273,8 +302,6 @@ export class UserService {
     const uniqueSkills = Array.from(new Set([...currentSkills, ...newSkills]));
 
     userData.skills = uniqueSkills.join(',');
-
-    console.log(userData.skills);
 
     await this.userRepository.save(userData);
   }

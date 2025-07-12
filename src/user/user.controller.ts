@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './decorator/user.decorator';
 import { UserEntity } from './entities/user.entity';
@@ -24,6 +32,12 @@ export class UserController {
     };
   }
 
+  @Get('/:id')
+  @UseGuards(JwtAuthGuard)
+  async getPersonalUser(@Param('id') id: string) {
+    return await this.userService.getPersonalUserData(id);
+  }
+
   @Get('/profile/personal')
   @UseGuards(JwtAuthGuard)
   async getUserProfileExists(@User() user: UserEntity) {
@@ -39,14 +53,12 @@ export class UserController {
     return await this.userService.updateUserProfile(user.id, updateUserDto);
   }
 
-  // 여기
   @Patch('/profile/update-status')
   @UseGuards(JwtAuthGuard)
   async updateUserProfileStatus(
     @User() user: UserEntity,
     @Body() body: UpdateUserCompanyStatusDto,
   ) {
-    console.log(body);
     return await this.userService.updateUserCompanyStatus(user.id, body);
   }
 
