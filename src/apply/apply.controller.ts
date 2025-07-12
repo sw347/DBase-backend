@@ -1,15 +1,18 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Req,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApplyService } from './apply.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Request } from 'express';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 
 @Controller('apply')
 export class ApplyController {
@@ -53,5 +56,11 @@ export class ApplyController {
     @Req() req: Request,
   ) {
     return await this.applyService.inputApply(files, body, req);
+  }
+
+  @Get('/status')
+  @UseGuards(JwtAuthGuard)
+  async getApplicationStatus() {
+    return this.applyService.getApplicationStatus();
   }
 }

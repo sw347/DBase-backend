@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { SocialLoginEntity } from './social-login.entity';
 import { UserCompanyEntity } from './user.company.entity';
-import { ApplicationStatusEntity } from 'src/job/entities/application-status.entity';
+import { ApplicationStatusEntity } from 'src/apply/entities/application-status.entity';
 import { UserExperienceEntity } from './user.experience.entity';
 
 @Entity({ name: 'user', database: 'DBase' })
@@ -37,7 +37,7 @@ export class UserEntity {
   @Column({ name: 'address', type: 'varchar', length: 191, nullable: true })
   address?: string;
 
-  @Column({ name: 'role', type: 'varchar' })
+  @Column({ name: 'category', type: 'varchar' })
   category: string;
 
   @Column({ name: 'affiliation', type: 'varchar', length: 191, nullable: true })

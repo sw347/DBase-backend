@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  OneToOne,
 } from 'typeorm';
-import { JobInformationEntity } from './job-information.entity';
+import { JobInformationEntity } from '../../job/entities/job-information.entity';
+import { ApplicationFileEntity } from './application-file.entity';
 
 @Entity({ name: 'application_status', database: 'DBase' })
 export class ApplicationStatusEntity {
@@ -24,10 +26,12 @@ export class ApplicationStatusEntity {
   @Column({ name: 'feedback', type: 'text', nullable: true })
   feedback: string | null;
 
-  // 🔗 JobInformation과의 관계 (N:1)
   @ManyToOne(() => JobInformationEntity, (job) => job.applications, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'job_id' })
   job: JobInformationEntity;
+
+  @OneToOne(() => ApplicationFileEntity, (file) => file.application)
+  applicationFile: ApplicationFileEntity;
 }

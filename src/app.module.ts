@@ -10,7 +10,7 @@ import { SocialLoginEntity } from './user/entities/social-login.entity';
 import { UserTokenEntity } from './user/entities/user-token.entity';
 import { RoadmapModule } from './roadmap/roadmap.module';
 import { JobModule } from './job/job.module';
-import { ApplicationStatusEntity } from './job/entities/application-status.entity';
+import { ApplicationStatusEntity } from './apply/entities/application-status.entity';
 import { CompanyInformationEntity } from './job/entities/company-information.entity';
 import { JobInformationEntity } from './job/entities/job-information.entity';
 import { PresentCompanyEntity } from './job/entities/present-company.entity';

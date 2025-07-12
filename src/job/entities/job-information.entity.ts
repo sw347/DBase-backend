@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { CompanyInformationEntity } from './company-information.entity';
-import { ApplicationStatusEntity } from './application-status.entity';
+import { ApplicationStatusEntity } from '../../apply/entities/application-status.entity';
 
 @Entity({ name: 'job_information', database: 'DBase' })
 export class JobInformationEntity {
