@@ -103,7 +103,7 @@ export class JobService {
 
     const result: CompanysDto[] = companies as CompanysDto[];
 
-    return result;
+    return { success: true, result };
   }
 
   async findCompany(id: number) {
