@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApplicationStatusEntity } from './entities/application-status.entity';
 import { Repository } from 'typeorm';
 import { JobInformationEntity } from 'src/job/entities/job-information.entity';
+import { CompanyInformationEntity } from 'src/job/entities/company-information.entity';
 
 @Injectable()
 export class ApplyService {
@@ -19,11 +20,13 @@ export class ApplyService {
     private readonly jobInformationRepository: Repository<JobInformationEntity>,
     @InjectRepository(ApplicationFileEntity)
     private readonly applicationFileEntity: Repository<ApplicationFileEntity>,
+    @InjectRepository(CompanyInformationEntity)
+    private readonly companyInformationRepository: Repository<CompanyInformationEntity>,
   ) {}
 
   async inputApply(
     files: {
-      resume: Express.Multer.File;
+      resumeAndCoverLetter: Express.Multer.File;
       portfolio: Express.Multer.File;
       etcFile: Express.Multer.File[];
     },
@@ -58,7 +61,7 @@ export class ApplyService {
       return newPath;
     };
 
-    const resumePath = files.resume?.[0] ? moveFile(files.resume[0]) : null;
+    const resumeAndCoverLetterPath = files.resumeAndCoverLetter?.[0] ? moveFile(files.resumeAndCoverLetter[0]) : null;
     const portfolioPath = files.portfolio?.[0]
       ? moveFile(files.portfolio[0])
       : null;
@@ -66,9 +69,9 @@ export class ApplyService {
 
     const applicationFile = this.applicationFileEntity.create({
       application: application,
-      resumePath,
-      portfolioPath,
-      etcFiles: etcPaths,
+      resumePath: resumeAndCoverLetterPath || null,
+      portfolioPath: portfolioPath || null,
+      etcFiles: etcPaths.length > 0 ? etcPaths : null,
     });
 
     await this.applicationFileEntity.save(applicationFile);
@@ -80,5 +83,98 @@ export class ApplyService {
     };
   }
 
-  async getApplicationStatus() {}
+  async getApplicationStatus(req: Request) {
+    const identifier = req.cookies['identifier'];
+    const user = await this.userService.findUserByIdentifier(identifier);
+    const userId = user.id;
+
+    const applications = await this.applicationStatusRepository.find({
+      where: { user_id: userId },
+      relations: ['job', 'job.company', 'applicationFile'],
+    });
+
+    return applications.map((app) => ({
+      id: app.id,
+      status: app.status,
+      feedback: app.feedback,
+      jobTitle: app.job.job_title,
+      companyName: app.job.company.company_name,
+      companyId: app.job.company.id,
+      applicationFile: app.applicationFile,
+      userName: user.name || user.email, // 사용자 이름 또는 이메일
+    }));
+  }
+
+  async downloadApplicationFiles(applicationId: number, req: Request) {
+    const identifier = req.cookies['identifier'];
+    const user = await this.userService.findUserByIdentifier(identifier);
+    const userId = user.id;
+
+    const application = await this.applicationStatusRepository.findOne({
+      where: { id: applicationId, user_id: userId },
+      relations: ['applicationFile'],
+    });
+
+    if (!application) {
+      throw new Error('지원서를 찾을 수 없습니다.');
+    }
+
+    if (!application.applicationFile) {
+      throw new Error('지원서 파일을 찾을 수 없습니다.');
+    }
+
+    const files = [];
+    
+    if (application.applicationFile.resumePath && fs.existsSync(application.applicationFile.resumePath)) {
+      files.push({
+        path: application.applicationFile.resumePath,
+        filename: '이력서_자기소개서.pdf',
+        type: 'resume'
+      });
+    }
+
+    if (application.applicationFile.portfolioPath && fs.existsSync(application.applicationFile.portfolioPath)) {
+      files.push({
+        path: application.applicationFile.portfolioPath,
+        filename: '포트폴리오.pdf',
+        type: 'portfolio'
+      });
+    }
+
+    if (application.applicationFile.etcFiles && application.applicationFile.etcFiles.length > 0) {
+      application.applicationFile.etcFiles.forEach((filePath, index) => {
+        if (fs.existsSync(filePath)) {
+          files.push({
+            path: filePath,
+            filename: `기타파일_${index + 1}.pdf`,
+            type: 'etc'
+          });
+        }
+      });
+    }
+
+    if (files.length === 0) {
+      throw new Error('다운로드할 파일이 없습니다.');
+    }
+
+    return files;
+  }
+
+  async updateApplicationStatus(applicationId: number, status: string, feedback?: string) {
+    const application = await this.applicationStatusRepository.findOne({
+      where: { id: applicationId },
+    });
+
+    if (!application) {
+      throw new Error('지원서를 찾을 수 없습니다.');
+    }
+
+    application.status = status;
+    if (feedback) {
+      application.feedback = feedback;
+    }
+
+    await this.applicationStatusRepository.save(application);
+    return { success: true, message: '상태가 업데이트되었습니다.' };
+  }
 }

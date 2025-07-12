@@ -12,10 +12,10 @@ export class ApplicationFileEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int' })
   id: number;
 
-  @Column({ name: 'resume_path', type: 'varchar', length: 1024 })
+  @Column({ name: 'resume_path', type: 'varchar', length: 1024, nullable: true })
   resumePath: string;
 
-  @Column({ name: 'portfolio_path', type: 'varchar', length: 1024 })
+  @Column({ name: 'portfolio_path', type: 'varchar', length: 1024, nullable: true })
   portfolioPath: string;
 
   @Column({
