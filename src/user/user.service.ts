@@ -71,7 +71,7 @@ export class UserService {
     let category = 'student';
 
     try {
-      if (oauthUser.email == 'sdh230304@sdh.hs.kr') category = 'teacher';
+      if (oauthUser.email.match('sdh230304')) category = 'teacher';
       else if (!oauthUser.email.startsWith('sdh')) category = 'teacher';
 
       const result = await qr.manager.insert(UserEntity, {
@@ -260,7 +260,21 @@ export class UserService {
       where: { id: userId },
     });
 
-    userData.skills = dto.skills;
+    const currentSkills = (userData.skills || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
+    const newSkills = (dto.skills || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
+    const uniqueSkills = Array.from(new Set([...currentSkills, ...newSkills]));
+
+    userData.skills = uniqueSkills.join(',');
+
+    console.log(userData.skills);
 
     await this.userRepository.save(userData);
   }
