@@ -1,6 +1,8 @@
 import {
+  Body,
   Controller,
   Get,
+  Patch,
   Post,
   Req,
   UploadedFiles,
@@ -11,6 +13,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as fs from 'fs';
 import { Request } from 'express';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Controller('job')
 export class JobController {
@@ -47,29 +50,30 @@ export class JobController {
 
             cb(null, dir); // 파일 저장 경로 설정
           },
-          filename: function (req, file, cb) {
-            cb(null, file.originalname);
+          filename: function (req: Request, file, cb) {
+            const decodedName = req.query.fileName as string;
+
+            cb(null, decodedName);
           },
         }),
       },
     ),
   )
-  async inputJob(
-    @UploadedFiles()
-    files: {
-      file: Express.Multer.File[];
-      etcFile: Express.Multer.File[];
-    },
-  ) {
-    const pdfFile = files.file?.[0];
+  async inputJob(@Req() req: Request) {
+    const pdfFile = req.query.fileName as string;
 
     if (!pdfFile) {
       throw new Error('PDF 파일 이름이 필요합니다.');
     }
 
-    const pdfFileName = Buffer.from(pdfFile.originalname, 'utf8').toString();
+    console.log('업로드된 파일 경로:', pdfFile);
 
-    return this.jobService.sendFile(pdfFileName); // 인공지능 서버에 파일 전송
+    return this.jobService.sendFile(pdfFile); // 인공지능 서버에 파일 전송
+  }
+
+  @Post('/input/update')
+  async inputCompany(@Body() body: UpdateCompanyDto) {
+    return this.jobService.updateCompanyAndJob(body);
   }
 
   @Get()

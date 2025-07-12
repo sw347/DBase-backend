@@ -18,6 +18,7 @@ import { ApplyModule } from './apply/apply.module';
 import { UserExperienceEntity } from './user/entities/user.experience.entity';
 import { UserCompanyEntity } from './user/entities/user.company.entity';
 import { ApplicationFileEntity } from './apply/entities/application-file.entity';
+import { EmployeeModule } from './employee/employee.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { ApplicationFileEntity } from './apply/entities/application-file.entity'
     RoadmapModule,
     JobModule,
     ApplyModule,
+    EmployeeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

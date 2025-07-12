@@ -41,9 +41,6 @@ export class JobInformationEntity {
   @Column({ name: 'work_type', type: 'text' })
   work_type: string;
 
-  @Column({ name: 'required_documents', type: 'text' })
-  required_documents: string;
-
   @Column({ name: 'internship_pay', type: 'varchar', length: 100 })
   internship_pay: string;
 

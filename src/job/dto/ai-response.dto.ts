@@ -31,10 +31,19 @@ export class JobInformationDto {
 
 export class CompanyInformationDto {
   @Expose()
+  company_id: number;
+
+  @Expose()
   company_name: string;
 
   @Expose()
   year: number;
+
+  @Expose()
+  deadline: string;
+
+  @Expose()
+  establishment_year: number;
 
   @Expose()
   business_type: string;
