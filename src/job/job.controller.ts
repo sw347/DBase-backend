@@ -79,7 +79,8 @@ export class JobController {
       throw new Error('PDF 파일 이름이 필요합니다.');
     }
 
-    return await this.jobService.sendFile(pdfFile); // 인공지능 서버에 파일 전송
+    const result = await this.jobService.sendFile(pdfFile); // 인공지능 서버에 파일 전송
+    res.status(201).json(result); // 결과를 클라이언트에 반환
   }
 
   @Patch('/input/update')
