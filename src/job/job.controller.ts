@@ -29,44 +29,64 @@ export class JobController {
         },
         {
           name: 'etcFile',
-          maxCount: 2,
+          maxCount: 1,
         },
       ],
       {
         storage: diskStorage({
-          destination: function (req, file, cb) {
-            if (!fs.existsSync('./uploads')) {
-              fs.mkdirSync('./uploads', { recursive: true });
+          destination: function (req: Request, file, cb) {
+            if (!req['uploadFolder']) {
+              if (!fs.existsSync('./uploads')) {
+                fs.mkdirSync('./uploads', { recursive: true });
+              }
+
+              const length = fs.readdirSync('./uploads').length;
+
+              const dir = `./uploads/${length}`;
+              if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, {
+                  recursive: true,
+                });
+              }
+
+              req['uploadFolder'] = dir;
             }
 
-            const length = fs.readdirSync('./uploads').length;
-
-            const dir = `./uploads/${length}`;
-            if (!fs.existsSync(dir)) {
-              fs.mkdirSync(dir, {
-                recursive: true,
-              });
-            }
-
-            cb(null, dir); // 파일 저장 경로 설정
+            cb(null, req['uploadFolder']); // 파일 저장 경로 설정
           },
           filename: function (req: Request, file, cb) {
+            const isEtc = req.query.etcFileName as string;
             const decodedName = req.query.fileName as string;
 
-            cb(null, decodedName);
+            let finalName: string;
+
+            if (file.fieldname === 'file') {
+              finalName = decodedName;
+            } else if (file.fieldname === 'etcFile') {
+              finalName = isEtc;
+            }
+
+            cb(null, finalName);
           },
         }),
       },
     ),
   )
-  async inputJob(@Req() req: Request) {
+  async inputJob(
+    @UploadedFiles()
+    files: {
+      file: Express.Multer.File[];
+      etcFile?: Express.Multer.File[];
+    },
+    @Req() req: Request,
+  ) {
     const pdfFile = req.query.fileName as string;
 
     if (!pdfFile) {
       throw new Error('PDF 파일 이름이 필요합니다.');
     }
 
-    console.log('업로드된 파일 경로:', pdfFile);
+    console.log(pdfFile);
 
     return this.jobService.sendFile(pdfFile); // 인공지능 서버에 파일 전송
   }
@@ -94,14 +114,6 @@ export class JobController {
 
     return this.jobService.findPinnedCompany(id);
   }
-
-  // 취업 중인 회사 중 1개
-  // @Get('/company')
-  // async employedStatus(@Req() req: Request) {
-  //   const userId: number = Number(req.query.userId);
-
-  //   return this.jobService.findEmployedStatus(userId);
-  // }
 
   @Get('/company/employed')
   async getAllEmployedStatus() {
