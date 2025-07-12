@@ -10,6 +10,16 @@ import { SocialLoginEntity } from './entities/social-login.entity';
 import { OauthUserDto } from 'src/auth/dto/oauth-user.dto';
 import { hash } from 'argon2';
 import { UserCompanyEntity } from './entities/user.company.entity';
+import { CompanyInformationEntity } from 'src/job/entities/company-information.entity';
+import { PresentCompanyEntity } from 'src/job/entities/present-company.entity';
+import { UpdateUserCompanyStatusDto } from './dto/update-user-company-status.dto';
+import { plainToInstance } from 'class-transformer';
+import {
+  CompanyDto,
+  ExperiencesDto,
+  PersonalProfileDto,
+  UserProfileDto,
+} from './dto/personal-profile.dto';
 
 @Injectable()
 export class UserService {
@@ -22,6 +32,12 @@ export class UserService {
     private readonly userTokenRepository: Repository<UserTokenEntity>,
     @InjectRepository(SocialLoginEntity)
     private readonly socialLoginRepo: Repository<SocialLoginEntity>,
+    @InjectRepository(CompanyInformationEntity)
+    private readonly companyInformationRepository: Repository<CompanyInformationEntity>,
+    @InjectRepository(UserCompanyEntity)
+    private readonly userCompanyRepository: Repository<UserCompanyEntity>,
+    @InjectRepository(PresentCompanyEntity)
+    private readonly presentCompanyRepository: Repository<PresentCompanyEntity>,
 
     private readonly configService: ConfigService,
   ) {}
@@ -156,11 +172,81 @@ export class UserService {
   }
 
   async getUserPersonalProfile(userId: number) {
-    const user = await this.userRepository.findOne({
+    const userData = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['company', 'experiences'],
     });
 
+    if (!userData) throw new Error('사용자를 찾을 수 없습니다.');
+
+    console.log(userData);
+
+    const user = plainToInstance(UserProfileDto, userData, {
+      excludeExtraneousValues: true,
+    });
+
     console.log(user);
+
+    const company = plainToInstance(CompanyDto, userData.company, {
+      excludeExtraneousValues: true,
+    });
+
+    console.log(company);
+
+    const experiences = (userData.experiences || []).map((exp) =>
+      plainToInstance(ExperiencesDto, exp, { excludeExtraneousValues: true }),
+    );
+
+    console.log(experiences);
+
+    const result: PersonalProfileDto = {
+      user_profile: user,
+      company: company,
+      experiences: experiences,
+    };
+
+    return result;
+  }
+
+  async updateUserCompanyStatus(
+    userId: number,
+    dto: UpdateUserCompanyStatusDto,
+  ) {
+    const company = await this.companyInformationRepository.findOne({
+      where: { company_name: dto.companyName },
+    });
+
+    if (!company) {
+      throw new Error('해당 회사가 존재하지 않습니다.');
+    }
+
+    const userCompany = await this.userCompanyRepository.findOne({
+      where: {
+        userId: userId,
+      },
+      relations: ['company'], // 회사 정보도 함께 불러오기
+    });
+
+    if (!userCompany) {
+      throw new Error('해당 유저의 회사 정보가 없습니다.');
+    }
+
+    userCompany.employment_status = dto.status;
+    userCompany.company_id = company.id;
+    await this.userCompanyRepository.save(userCompany);
+
+    if (dto.status === '구직중') {
+      const alreadyExists = await this.presentCompanyRepository.findOne({
+        where: { company_id: company.id },
+      });
+
+      if (!alreadyExists) {
+        await this.presentCompanyRepository.save({
+          company_id: company.id,
+          company: company,
+        });
+      }
+    }
+    return { success: true, message: '업데이트 완료' };
   }
 }

@@ -40,6 +40,8 @@ export class CompanyInformationEntity {
   @OneToMany(() => JobInformationEntity, (job) => job.company)
   jobs: JobInformationEntity[];
 
-  @OneToMany(() => PresentCompanyEntity, (present) => present.company)
+  @OneToMany(() => PresentCompanyEntity, (present) => present.company, {
+    cascade: true,
+  })
   present: PresentCompanyEntity[];
 }

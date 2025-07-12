@@ -18,8 +18,8 @@ export class UserExperienceEntity {
   @Column({ name: 'type', type: 'varchar', length: 50 })
   type: string;
 
-  @Column({ name: 'date', type: 'date', nullable: true })
-  date?: Date;
+  @Column({ name: 'date', type: 'varchar', length: 50, nullable: true })
+  date?: String;
 
   @Column({ name: 'name', type: 'varchar', length: 255 })
   name: string;

@@ -46,8 +46,8 @@ export class UserEntity {
   @Column({ name: 'skills', type: 'text', nullable: true })
   skills?: string;
 
-  // @Column({ name: 'portfolio_url', type: 'text', nullable: true })
-  // porfolio_url?: string;
+  @Column({ name: 'portfolio_url', type: 'text', nullable: true })
+  porfolio_url?: string;
 
   @OneToOne(() => UserCompanyEntity, (company) => company.user, {
     cascade: true,

@@ -28,14 +28,12 @@ export class JobService {
   ) {}
 
   async sendFile(fileName: string) {
-    const folderId = fs.readdirSync('uploads').length - 1; // 다른 방식 필요
+    const fileId = (await this.companyInformationRepository.find()).length + 1;
 
     try {
-      // 폴더 이름 저장하기 folderId
       const response = await axios.post(
         'http://localhost:3000/api/process-pdf',
         {
-          folderId,
           fileName,
         },
       );
@@ -47,11 +45,11 @@ export class JobService {
       }
 
       const company = await this.companyInformationRepository.findOne({
-        where: { id: folderId },
+        where: { id: fileId },
       });
 
       const job = await this.jobInformationRepository.findOne({
-        where: { company_id: folderId },
+        where: { company_id: fileId },
       });
 
       if (!company || !job) {
@@ -80,11 +78,6 @@ export class JobService {
         company_information: companyInformation,
         job_information: jobInformation,
       };
-
-      await this.presentCompanyRepository.save({
-        company_id: company.id,
-        company: company,
-      });
 
       return result;
     } catch (error) {

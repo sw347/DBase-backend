@@ -6,6 +6,7 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { UserProfileDto } from './dto/user-profile.dto';
 import { Response } from 'express';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
+import { UpdateUserCompanyStatusDto } from './dto/update-user-company-status.dto';
 
 @Controller('user')
 export class UserController {
@@ -30,5 +31,14 @@ export class UserController {
     @Body() updateUserDto: UpdateUserProfileDto,
   ) {
     return await this.userService.updateUserProfile(user.id, updateUserDto);
+  }
+
+  @Patch('/profile/update-status')
+  @UseGuards(JwtAuthGuard)
+  async updateUserProfileStatus(
+    @User() user: UserEntity,
+    @Body() body: UpdateUserCompanyStatusDto,
+  ) {
+    return await this.userService.updateUserCompanyStatus(user.id, body);
   }
 }

@@ -6,6 +6,7 @@ import {
   Post,
   Req,
   Res,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { JobService } from './job.service';
@@ -14,6 +15,7 @@ import { diskStorage } from 'multer';
 import * as fs from 'fs';
 import { Request, Response } from 'express';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import * as path from 'path';
 
 @Controller('job')
 export class JobController {
@@ -27,59 +29,39 @@ export class JobController {
           name: 'file',
           maxCount: 1,
         },
-        {
-          name: 'etcFile',
-          maxCount: 1,
-        },
       ],
       {
         storage: diskStorage({
           destination: function (req: Request, file, cb) {
-            if (!req['uploadFolder']) {
-              if (!fs.existsSync('./uploads')) {
-                fs.mkdirSync('./uploads', { recursive: true });
-              }
-
-              const length = fs.readdirSync('./uploads').length;
-
-              const dir = `./uploads/${length}`;
-              if (!fs.existsSync(dir)) {
-                fs.mkdirSync(dir, {
-                  recursive: true,
-                });
-              }
-
-              req['uploadFolder'] = dir;
+            const dir = `./uploads/temp`;
+            if (!fs.existsSync(dir)) {
+              fs.mkdirSync(dir, {
+                recursive: true,
+              });
             }
-
-            cb(null, req['uploadFolder']); // 파일 저장 경로 설정
+            cb(null, dir);
           },
           filename: function (req: Request, file, cb) {
-            const isEtc = req.query.etcFileName as string;
-            const decodedName = req.query.fileName as string;
-
-            let finalName: string;
-
-            if (file.fieldname === 'file') {
-              finalName = decodedName;
-            } else if (file.fieldname === 'etcFile') {
-              finalName = isEtc;
-            }
-
-            cb(null, finalName);
+            const timestampedName = `${Date.now()}-${req.query.fileName}`;
+            file.originalname = timestampedName;
+            cb(null, timestampedName);
           },
         }),
       },
     ),
   )
-  async inputJob(@Req() req: Request, @Res() res: Response) {
-    const pdfFile = req.query.fileName as string;
+  async inputJob(
+    @UploadedFiles() files: { file: Express.Multer.File[] },
+    @Res() res: Response,
+  ) {
+    const savedFile = files.file?.[0];
 
-    if (!pdfFile) {
-      throw new Error('PDF 파일 이름이 필요합니다.');
+    if (!savedFile) {
+      throw new Error('PDF 파일이 업로드되지 않았습니다.');
     }
 
-    const result = await this.jobService.sendFile(pdfFile); // 인공지능 서버에 파일 전송
+    const result = await this.jobService.sendFile(savedFile.originalname); // 인공지능 서버에 파일 전송
+    fs.unlinkSync(path.join('uploads', 'temp', savedFile.originalname));
     res.status(201).json(result); // 결과를 클라이언트에 반환
   }
 
