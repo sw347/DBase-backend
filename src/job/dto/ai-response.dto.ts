@@ -31,7 +31,7 @@ export class JobInformationDto {
 
 export class CompanyInformationDto {
   @Expose()
-  company_id: number;
+  id: number;
 
   @Expose()
   company_name: string;
