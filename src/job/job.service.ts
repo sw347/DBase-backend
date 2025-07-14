@@ -139,7 +139,7 @@ export class JobService {
     const { company_information, job_information } = body;
 
     const company = await this.companyInformationRepository.findOne({
-      where: { id: company_information.company_id },
+      where: { company_name: company_information.company_name },
     });
 
     if (!company) throw new Error('회사를 찾을 수 없습니다.');

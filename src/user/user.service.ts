@@ -72,6 +72,7 @@ export class UserService {
 
     try {
       if (oauthUser.email.match('sdh230304')) category = 'teacher';
+      else if (oauthUser.email.match('sdh230303@')) category = 'teacher';
       else if (!oauthUser.email.startsWith('sdh')) category = 'teacher';
 
       const result = await qr.manager.insert(UserEntity, {
