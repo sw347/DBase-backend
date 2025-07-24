@@ -18,12 +18,15 @@ import { Request, Response } from 'express';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import * as fs from 'fs';
 import * as archiver from 'archiver';
+import { User } from 'src/user/decorator/user.decorator';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Controller('apply')
 export class ApplyController {
   constructor(private readonly applyService: ApplyService) {}
 
-  @Post('/input')
+  @Post('/input/:id')
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -45,7 +48,10 @@ export class ApplyController {
           destination: `./uploads/temp`,
           filename: (req, file, cb) => {
             // 한글 파일명 인코딩 문제 해결
-            const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+            const originalName = Buffer.from(
+              file.originalname,
+              'latin1',
+            ).toString('utf8');
             const timestamp = Date.now();
             const extension = originalName.split('.').pop();
             const nameWithoutExt = originalName.replace(`.${extension}`, '');
@@ -63,16 +69,16 @@ export class ApplyController {
       portfolio: Express.Multer.File;
       etcFile: Express.Multer.File[];
     },
-    @Body() body: { companyId: string },
-    @Req() req: Request,
+    @Param('id') companyId: string,
+    @User() user: UserEntity,
   ) {
-    return await this.applyService.inputApply(files, body, req);
+    return await this.applyService.inputApply(files, companyId, user.id);
   }
 
   @Get('/status')
   @UseGuards(JwtAuthGuard)
-  async getApplicationStatus(@Req() req: Request) {
-    return this.applyService.getApplicationStatus(req);
+  async getApplicationStatus(@User() user: UserEntity) {
+    return this.applyService.getApplicationStatus(user.id);
   }
 
   @Get('/download/:applicationId')
@@ -94,11 +100,14 @@ export class ApplyController {
 
       // ZIP 파일 생성
       const archive = archiver('zip', {
-        zlib: { level: 9 } // 최대 압축 레벨
+        zlib: { level: 9 }, // 최대 압축 레벨
       });
 
       res.setHeader('Content-Type', 'application/zip');
-      res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent('지원서류.zip')}`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename*=UTF-8''${encodeURIComponent('지원서류.zip')}`,
+      );
 
       archive.pipe(res);
 
@@ -110,10 +119,11 @@ export class ApplyController {
       });
 
       await archive.finalize();
-
     } catch (error) {
       console.error('다운로드 에러:', error);
-      res.status(500).json({ message: error.message || '다운로드 중 오류가 발생했습니다.' });
+      res
+        .status(500)
+        .json({ message: error.message || '다운로드 중 오류가 발생했습니다.' });
     }
   }
 
