@@ -20,5 +20,3 @@ import { PresentCompanyEntity } from './entities/present-company.entity';
   providers: [JobService],
 })
 export class JobModule {}
-
-('/upload/jobinformation/1/file.pdf');

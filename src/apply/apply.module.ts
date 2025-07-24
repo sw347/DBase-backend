@@ -22,6 +22,7 @@ import { AuthModule } from 'src/auth/auth.module';
       CompanyInformationEntity,
     ]),
     AuthModule,
+    UserModule,
   ],
   controllers: [ApplyController],
   providers: [ApplyService, JwtAuthGuard],

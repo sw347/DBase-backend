@@ -10,6 +10,8 @@ import { UserExperienceEntity } from './entities/user.experience.entity';
 import { UserCompanyEntity } from './entities/user.company.entity';
 import { CompanyInformationEntity } from 'src/job/entities/company-information.entity';
 import { PresentCompanyEntity } from 'src/job/entities/present-company.entity';
+import { ApplyModule } from 'src/apply/apply.module';
+import { ApplicationFileEntity } from 'src/apply/entities/application-file.entity';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { PresentCompanyEntity } from 'src/job/entities/present-company.entity';
       UserCompanyEntity,
       CompanyInformationEntity,
       PresentCompanyEntity,
+      ApplicationFileEntity,
     ]),
   ],
   controllers: [UserController],

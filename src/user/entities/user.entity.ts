@@ -9,6 +9,7 @@ import { SocialLoginEntity } from './social-login.entity';
 import { UserCompanyEntity } from './user.company.entity';
 import { ApplicationStatusEntity } from 'src/apply/entities/application-status.entity';
 import { UserExperienceEntity } from './user.experience.entity';
+import { ApplicationFileEntity } from 'src/apply/entities/application-file.entity';
 
 @Entity({ name: 'user', database: 'DBase' })
 export class UserEntity {
@@ -76,6 +77,11 @@ export class UserEntity {
 
   @OneToOne(() => UserCompanyEntity, (uc) => uc.user, { cascade: true })
   userCompany: UserCompanyEntity;
+
+  @OneToMany(() => ApplicationFileEntity, (file) => file.user, {
+    cascade: true,
+  })
+  applicationfile: ApplicationFileEntity;
 
   @Column({ name: 'created_at', type: 'bigint', nullable: false })
   createdAt: number;
