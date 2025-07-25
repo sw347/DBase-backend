@@ -8,8 +8,8 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:5173',
-      'http://dbase.o-r.kr/',
-      'http://15.164.251.148/',
+      'http://dbase.o-r.kr',
+      'http://15.164.251.148',
     ],
     credentials: true,
   });
