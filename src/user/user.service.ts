@@ -72,7 +72,9 @@ export class UserService {
 
     try {
       if (oauthUser.email.match('sdh230304')) category = 'teacher';
-      else if (oauthUser.email.match('sdh230303@')) category = 'teacher';
+      else if (oauthUser.email.match('sdh230303')) category = 'teacher';
+      else if (oauthUser.email.match('sdh230310')) category = 'teacher';
+      else if (oauthUser.email.match('sdh230406')) category = 'teacher';
       else if (!oauthUser.email.startsWith('sdh')) category = 'teacher';
 
       const result = await qr.manager.insert(UserEntity, {
@@ -145,12 +147,16 @@ export class UserService {
     return await hash(token, { raw: false });
   }
 
-  async findOneById(identifier: string) {
+  async findOneByIdentifier(identifier: string) {
     const social = await this.socialLoginRepo.findOne({
       where: { identifier },
     });
 
     return await this.userRepository.findOne({ where: { id: social.userId } });
+  }
+
+  async findOneById(id: number) {
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   async updateUserProfile(userId: number, updateUserDto: UpdateUserProfileDto) {

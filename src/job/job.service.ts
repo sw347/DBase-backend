@@ -138,6 +138,13 @@ export class JobService {
   async updateCompanyAndJob(@Body() body: UpdateCompanyDto) {
     const { company_information, job_information } = body;
 
+    this.updateCompany(company_information);
+    this.updateJob(job_information, company_information);
+
+    return { success: true, message: '업데이트 완료' };
+  }
+
+  async updateCompany(company_information: CompanyInformationDto) {
     const company = await this.companyInformationRepository.findOne({
       where: { id: company_information.id },
     });
@@ -154,7 +161,12 @@ export class JobService {
     company.address = company_information.address;
 
     await this.companyInformationRepository.save(company);
+  }
 
+  async updateJob(
+    job_information: JobInformationDto,
+    company_information: CompanyInformationDto,
+  ) {
     const job = await this.jobInformationRepository.findOne({
       where: { company_id: company_information.id },
     });
@@ -172,7 +184,5 @@ export class JobService {
     job.additional_requirements = job_information.additional_requirements;
 
     await this.jobInformationRepository.save(job);
-
-    return { success: true, message: '업데이트 완료' };
   }
 }

@@ -8,6 +8,8 @@ import { ApplicationStatusEntity } from './entities/application-status.entity';
 import { Repository } from 'typeorm';
 import { JobInformationEntity } from 'src/job/entities/job-information.entity';
 import { CompanyInformationEntity } from 'src/job/entities/company-information.entity';
+import { User } from 'src/user/decorator/user.decorator';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ApplyService {
@@ -30,14 +32,9 @@ export class ApplyService {
       portfolio: Express.Multer.File;
       etcFile: Express.Multer.File[];
     },
-    @Body() body: { companyId: string },
-    @Req() req: Request,
+    companyId: string,
+    userId: number,
   ) {
-    const identifier = req.cookies['identifier'];
-    const user = await this.userService.findUserByIdentifier(identifier);
-    const userId = user.id;
-    const companyId = body.companyId;
-
     const job = await this.jobInformationRepository.findOne({
       where: { company_id: Number(companyId) },
     });
@@ -61,7 +58,9 @@ export class ApplyService {
       return newPath;
     };
 
-    const resumeAndCoverLetterPath = files.resumeAndCoverLetter?.[0] ? moveFile(files.resumeAndCoverLetter[0]) : null;
+    const resumeAndCoverLetterPath = files.resumeAndCoverLetter?.[0]
+      ? moveFile(files.resumeAndCoverLetter[0])
+      : null;
     const portfolioPath = files.portfolio?.[0]
       ? moveFile(files.portfolio[0])
       : null;
@@ -69,6 +68,8 @@ export class ApplyService {
 
     const applicationFile = this.applicationFileEntity.create({
       application: application,
+      userId: Number(userId),
+      companyId: Number(companyId),
       resumePath: resumeAndCoverLetterPath || null,
       portfolioPath: portfolioPath || null,
       etcFiles: etcPaths.length > 0 ? etcPaths : null,
@@ -83,10 +84,8 @@ export class ApplyService {
     };
   }
 
-  async getApplicationStatus(req: Request) {
-    const identifier = req.cookies['identifier'];
-    const user = await this.userService.findUserByIdentifier(identifier);
-    const userId = user.id;
+  async getApplicationStatus(userId: number) {
+    const user = await this.userService.findOneById(userId);
 
     const applications = await this.applicationStatusRepository.find({
       where: { user_id: userId },
@@ -124,30 +123,39 @@ export class ApplyService {
     }
 
     const files = [];
-    
-    if (application.applicationFile.resumePath && fs.existsSync(application.applicationFile.resumePath)) {
+
+    if (
+      application.applicationFile.resumePath &&
+      fs.existsSync(application.applicationFile.resumePath)
+    ) {
       files.push({
         path: application.applicationFile.resumePath,
         filename: '이력서_자기소개서.pdf',
-        type: 'resume'
+        type: 'resume',
       });
     }
 
-    if (application.applicationFile.portfolioPath && fs.existsSync(application.applicationFile.portfolioPath)) {
+    if (
+      application.applicationFile.portfolioPath &&
+      fs.existsSync(application.applicationFile.portfolioPath)
+    ) {
       files.push({
         path: application.applicationFile.portfolioPath,
         filename: '포트폴리오.pdf',
-        type: 'portfolio'
+        type: 'portfolio',
       });
     }
 
-    if (application.applicationFile.etcFiles && application.applicationFile.etcFiles.length > 0) {
+    if (
+      application.applicationFile.etcFiles &&
+      application.applicationFile.etcFiles.length > 0
+    ) {
       application.applicationFile.etcFiles.forEach((filePath, index) => {
         if (fs.existsSync(filePath)) {
           files.push({
             path: filePath,
             filename: `기타파일_${index + 1}.pdf`,
-            type: 'etc'
+            type: 'etc',
           });
         }
       });
@@ -160,7 +168,11 @@ export class ApplyService {
     return files;
   }
 
-  async updateApplicationStatus(applicationId: number, status: string, feedback?: string) {
+  async updateApplicationStatus(
+    applicationId: number,
+    status: string,
+    feedback?: string,
+  ) {
     const application = await this.applicationStatusRepository.findOne({
       where: { id: applicationId },
     });
