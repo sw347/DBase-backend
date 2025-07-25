@@ -29,7 +29,10 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('/google/callback')
-  async authCallback(@User() user: OauthUserDto, @Res() response: Response): Promise<void> {
+  async authCallback(
+    @User() user: OauthUserDto,
+    @Res() response: Response,
+  ): Promise<void> {
     try {
       const { accessToken, refreshToken } = await this.authService.login(user);
 
@@ -39,8 +42,7 @@ export class AuthController {
 
       response.cookie('refreshToken', refreshToken);
 
-      response.redirect('http://localhost:5173'); // 다시 돌아올 경로
-
+      response.redirect('http://dbase.o-r.kr/'); // 다시 돌아올 경로
     } catch (error) {
       console.error(error);
 
