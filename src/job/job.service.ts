@@ -38,8 +38,6 @@ export class JobService {
         },
       );
 
-      console.log('AI 서버로부터 상태 응답:', response.data.status);
-
       if (response.data.status !== 'success') {
         return { success: false, message: response.data.message };
       }
@@ -59,6 +57,11 @@ export class JobService {
         };
       }
 
+      company.company_name = company.company_name.replace(
+        /[^가-힣a-zA-Z0-9]/g,
+        '',
+      );
+
       const companyInformation: CompanyInformationDto = plainToInstance(
         CompanyInformationDto,
         company,
@@ -70,6 +73,7 @@ export class JobService {
         JobInformationDto,
         job,
         {
+          // [\{ \ }\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi
           excludeExtraneousValues: true,
         },
       );
@@ -108,31 +112,6 @@ export class JobService {
     });
 
     return company;
-  }
-
-  async findPinnedCompany(id: number) {
-    const company = await this.companyInformationRepository.findOne({
-      where: { id },
-    });
-
-    if (!company) return null;
-
-    const result: EmployedCompanyDto = plainToInstance(
-      EmployedCompanyDto,
-      company,
-      { excludeExtraneousValues: true },
-    );
-  }
-
-  async findAllEmployedStatus() {
-    return this.presentCompanyRepository.find({
-      relations: ['company'],
-      select: {
-        company: {
-          address: true,
-        },
-      },
-    });
   }
 
   async updateCompanyAndJob(@Body() body: UpdateCompanyDto) {

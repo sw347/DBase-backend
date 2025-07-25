@@ -81,16 +81,4 @@ export class JobController {
 
     return this.jobService.findCompany(id);
   }
-
-  @Get('/company/pin')
-  async getPinnedCompany(@Req() req: Request) {
-    const id: number = Number(req.query.id);
-
-    return this.jobService.findPinnedCompany(id);
-  }
-
-  @Get('/company/employed')
-  async getAllEmployedStatus() {
-    return this.jobService.findAllEmployedStatus();
-  }
 }
