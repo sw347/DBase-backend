@@ -2,7 +2,6 @@ import { Body, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { JobInformationEntity } from './entities/job-information.entity';
 import { CompanyInformationEntity } from './entities/company-information.entity';
-import * as fs from 'fs';
 import { Repository } from 'typeorm';
 import {
   AIResponseDto,
@@ -11,7 +10,6 @@ import {
 } from './dto/ai-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanysDto } from './dto/company.dto';
-import { EmployedCompanyDto } from './dto/employed-company.dto';
 import { plainToInstance } from 'class-transformer';
 import { PresentCompanyEntity } from './entities/present-company.entity';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -73,7 +71,6 @@ export class JobService {
         JobInformationDto,
         job,
         {
-          // [\{ \ }\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi
           excludeExtraneousValues: true,
         },
       );
@@ -163,5 +160,16 @@ export class JobService {
     job.additional_requirements = job_information.additional_requirements;
 
     await this.jobInformationRepository.save(job);
+  }
+
+  async findAllEmployedStatus() {
+    return this.presentCompanyRepository.find({
+      relations: ['company'],
+      select: {
+        company: {
+          address: true,
+        },
+      },
+    });
   }
 }

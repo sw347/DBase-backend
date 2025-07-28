@@ -81,4 +81,9 @@ export class JobController {
 
     return this.jobService.findCompany(id);
   }
+
+  @Get('/company/employed')
+  async getAllEmployedStatus() {
+    return this.jobService.findAllEmployedStatus();
+  }
 }

@@ -5,7 +5,6 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { UserTokenEntity } from './entities/user-token.entity';
-import { ConfigService } from '@nestjs/config';
 import { SocialLoginEntity } from './entities/social-login.entity';
 import { OauthUserDto } from 'src/auth/dto/oauth-user.dto';
 import { hash } from 'argon2';
