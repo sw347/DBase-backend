@@ -113,7 +113,7 @@ export class ApplyService {
       });
     }
 
-    return user;
+    return user.reverse();
   }
 
   async getApplicationStudentStatus(userId: number) {
@@ -124,16 +124,18 @@ export class ApplyService {
       relations: ['job', 'job.company', 'applicationFile'],
     });
 
-    return applications.map((app) => ({
-      id: app.id,
-      status: app.status,
-      feedback: app.feedback,
-      jobTitle: app.job.job_title,
-      companyName: app.job.company.company_name,
-      companyId: app.job.company.id,
-      applicationFile: app.applicationFile,
-      userName: user.name || user.email, // 사용자 이름 또는 이메일
-    }));
+    return applications
+      .map((app) => ({
+        id: app.id,
+        status: app.status,
+        feedback: app.feedback,
+        jobTitle: app.job.job_title,
+        companyName: app.job.company.company_name,
+        companyId: app.job.company.id,
+        applicationFile: app.applicationFile,
+        userName: user.name || user.email, // 사용자 이름 또는 이메일
+      }))
+      .reverse();
   }
 
   async downloadApplicationFiles(applicationId: number, req: Request) {
