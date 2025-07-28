@@ -55,10 +55,9 @@ export class JobService {
         };
       }
 
-      company.company_name = company.company_name.replace(
-        /[^가-힣a-zA-Z0-9]/g,
-        '',
-      );
+      company.company_name = company.company_name
+        .replace(/\(주\)|㈜|주식회사/g, '')
+        .replace(/[^가-힣a-zA-Z0-9]/g, '');
 
       const companyInformation: CompanyInformationDto = plainToInstance(
         CompanyInformationDto,
@@ -114,8 +113,8 @@ export class JobService {
   async updateCompanyAndJob(@Body() body: UpdateCompanyDto) {
     const { company_information, job_information } = body;
 
-    this.updateCompany(company_information);
-    this.updateJob(job_information, company_information);
+    await this.updateCompany(company_information);
+    await this.updateJob(job_information, company_information);
 
     return { success: true, message: '업데이트 완료' };
   }
