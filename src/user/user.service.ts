@@ -185,8 +185,6 @@ export class UserService {
       relations: ['company', 'experiences'],
     });
 
-    console.log(userData);
-
     const user = plainToInstance(UserProfileDto, userData, {
       excludeExtraneousValues: true,
     });
@@ -321,5 +319,17 @@ export class UserService {
     const result = await this.userExperienceRepository.save(newExperience);
 
     return { success: true, data: result };
+  }
+
+  async categoryCheck(userId: number): Promise<boolean> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (user.category === 'teacher') return true;
+    else return false;
+  }
+
+  async userName(userId: number): Promise<string> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    return user.name;
   }
 }

@@ -42,14 +42,10 @@ export class AuthController {
 
       response.cookie('refreshToken', refreshToken);
 
-      console.log(process.env.LOCAL === 'true');
-
       const redirectHref =
         process.env.LOCAL === 'true'
           ? 'http://localhost:5173'
           : 'http://dbase.o-r.kr/';
-
-      console.log(redirectHref);
 
       response.redirect(redirectHref); // 다시 돌아올 경로
     } catch (error) {

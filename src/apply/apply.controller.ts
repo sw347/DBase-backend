@@ -20,10 +20,14 @@ import * as fs from 'fs';
 import * as archiver from 'archiver';
 import { User } from 'src/user/decorator/user.decorator';
 import { UserEntity } from 'src/user/entities/user.entity';
+import { UserService } from 'src/user/user.service';
 
 @Controller('apply')
 export class ApplyController {
-  constructor(private readonly applyService: ApplyService) {}
+  constructor(
+    private readonly applyService: ApplyService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post('/input/:id')
   @UseGuards(JwtAuthGuard)
@@ -78,7 +82,9 @@ export class ApplyController {
   @Get('/status')
   @UseGuards(JwtAuthGuard)
   async getApplicationStatus(@User() user: UserEntity) {
-    return this.applyService.getApplicationStatus(user.id);
+    const category = await this.userService.categoryCheck(user.id); // true면 선생님, false 학생
+
+    return this.applyService.getApplicationStatus(user.id, category);
   }
 
   @Get('/download/:applicationId')

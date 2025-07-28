@@ -1,5 +1,5 @@
 import { ApplicationFileEntity } from './entities/application-file.entity';
-import { Body, Injectable, Req } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { UserService } from 'src/user/user.service';
 import * as fs from 'fs';
@@ -8,8 +8,6 @@ import { ApplicationStatusEntity } from './entities/application-status.entity';
 import { Repository } from 'typeorm';
 import { JobInformationEntity } from 'src/job/entities/job-information.entity';
 import { CompanyInformationEntity } from 'src/job/entities/company-information.entity';
-import { User } from 'src/user/decorator/user.decorator';
-import { UserEntity } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ApplyService {
@@ -84,7 +82,41 @@ export class ApplyService {
     };
   }
 
-  async getApplicationStatus(userId: number) {
+  async getApplicationStatus(userId: number, category: boolean) {
+    switch (category) {
+      case true:
+        return this.getApplicationTeacherStatus();
+      case false:
+        return this.getApplicationStudentStatus(userId);
+    }
+  }
+
+  async getApplicationTeacherStatus() {
+    const applications = await this.applicationStatusRepository.find({
+      relations: ['job', 'job.company', 'applicationFile'],
+    });
+
+    const user = [];
+
+    for (const app of applications) {
+      const userName = await this.userService.userName(app.user_id);
+
+      user.push({
+        id: app.id,
+        status: app.status,
+        feedback: app.feedback,
+        jobTitle: app.job.job_title,
+        companyName: app.job.company.company_name,
+        companyId: app.job.company.id,
+        applicationFile: app.applicationFile,
+        userName,
+      });
+    }
+
+    return user;
+  }
+
+  async getApplicationStudentStatus(userId: number) {
     const user = await this.userService.findOneById(userId);
 
     const applications = await this.applicationStatusRepository.find({
