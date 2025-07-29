@@ -45,7 +45,7 @@ export class AuthController {
       const redirectHref =
         process.env.LOCAL === 'true'
           ? 'http://localhost:5173'
-          : 'http://dbase.o-r.kr/';
+          : 'https://dbase.o-r.kr/';
 
       response.redirect(redirectHref); // 다시 돌아올 경로
     } catch (error) {
