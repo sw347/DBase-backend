@@ -300,7 +300,7 @@ export class UserService {
     userCompany.company_name = dto.company_name;
     userCompany.employment_status = dto.employment_status;
     userCompany.desired_position = dto.desired_position;
-    userCompany.company_id = company.id;
+    userCompany.company = company;
     userCompany.work_start_date = dto.work_start_date;
     userCompany.work_end_date = dto.work_end_date;
 
