@@ -19,6 +19,7 @@ export class EmployeeService {
       },
       relations: ['user'],
     });
+
     // 필요한 정보만 추려서 반환
     return employees.map((emp) => ({
       user_id: emp.user.id,

@@ -162,7 +162,7 @@ export class JobService {
   }
 
   async findAllEmployedStatus() {
-    return this.presentCompanyRepository.find({
+    return await this.presentCompanyRepository.find({
       relations: ['company'],
       select: {
         company: {

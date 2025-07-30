@@ -1,21 +1,13 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
-import { UserService } from './user.service';
-import { User } from './decorator/user.decorator';
-import { UserEntity } from './entities/user.entity';
+import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
-import { UserProfileDto } from './dto/user-profile.dto';
-import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
-import { UpdateUserCompanyStatusDto } from './dto/update-user-company-status.dto';
-import { UpdateSkillsDto } from './dto/update-skills.dto';
+import { User } from './decorator/user.decorator';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
+import { UpdateSkillsDto } from './dto/update-skills.dto';
+import { UpdateUserCompanyStatusDto } from './dto/update-user-company-status.dto';
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
+import { UserProfileDto } from './dto/user-profile.dto';
+import { UserEntity } from './entities/user.entity';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {

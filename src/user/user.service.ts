@@ -1,26 +1,26 @@
-import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
-import { DateTime } from 'luxon';
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
-import { UserEntity } from './entities/user.entity';
-import { UserTokenEntity } from './entities/user-token.entity';
-import { SocialLoginEntity } from './entities/social-login.entity';
-import { OauthUserDto } from 'src/auth/dto/oauth-user.dto';
 import { hash } from 'argon2';
-import { UserCompanyEntity } from './entities/user.company.entity';
+import { plainToInstance } from 'class-transformer';
+import { DateTime } from 'luxon';
+import { OauthUserDto } from 'src/auth/dto/oauth-user.dto';
 import { CompanyInformationEntity } from 'src/job/entities/company-information.entity';
 import { PresentCompanyEntity } from 'src/job/entities/present-company.entity';
-import { UpdateUserCompanyStatusDto } from './dto/update-user-company-status.dto';
-import { plainToInstance } from 'class-transformer';
+import { DataSource, Repository } from 'typeorm';
 import {
   CompanyDto,
   ExperiencesDto,
   PersonalProfileDto,
   UserProfileDto,
 } from './dto/personal-profile.dto';
-import { UpdateSkillsDto } from './dto/update-skills.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
+import { UpdateSkillsDto } from './dto/update-skills.dto';
+import { UpdateUserCompanyStatusDto } from './dto/update-user-company-status.dto';
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
+import { SocialLoginEntity } from './entities/social-login.entity';
+import { UserTokenEntity } from './entities/user-token.entity';
+import { UserCompanyEntity } from './entities/user.company.entity';
+import { UserEntity } from './entities/user.entity';
 import { UserExperienceEntity } from './entities/user.experience.entity';
 
 @Injectable()

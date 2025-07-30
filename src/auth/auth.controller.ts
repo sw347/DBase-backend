@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  HttpStatus,
-  InternalServerErrorException,
-  Res,
-  UseFilters,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, HttpStatus, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './google/google.guard';
-import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/decorator/user.decorator';
 import { OauthUserDto } from './dto/oauth-user.dto';
 import { Response } from 'express';
