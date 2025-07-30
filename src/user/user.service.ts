@@ -247,12 +247,6 @@ export class UserService {
       throw new Error('해당 회사가 존재하지 않습니다.');
     }
 
-    if (!company) {
-      company = await this.companyInformationRepository.save({
-        company_name: dto.company_name,
-      });
-    }
-
     const userCompany = await this.userCompanyRepository.findOne({
       where: {
         userId: userId,
@@ -270,6 +264,7 @@ export class UserService {
     userCompany.company_id = company.id;
     userCompany.work_start_date = dto.work_start_date;
     userCompany.work_end_date = dto.work_end_date;
+
     await this.userCompanyRepository.save(userCompany);
 
     if (dto.employment_status === '구직중') {

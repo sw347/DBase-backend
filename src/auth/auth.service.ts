@@ -69,7 +69,7 @@ export class AuthService {
       const payload = this.jwtService.verify(accessToken, {
         secret: this.configService.get('SECRET_KEY'),
       });
-
+      console.log('JWT Payload:', payload);
       const userId = payload.identifier;
 
       const user = await this.userService.findOneByIdentifier(userId);
