@@ -1,10 +1,10 @@
 import {
   Column,
   Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
   JoinColumn,
+  ManyToOne,
   OneToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { JobInformationEntity } from '../../job/entities/job-information.entity';
 import { ApplicationFileEntity } from './application-file.entity';

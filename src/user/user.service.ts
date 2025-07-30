@@ -243,8 +243,6 @@ export class UserService {
     userId: number,
     dto: UpdateUserCompanyStatusDto,
   ) {
-    console.log(dto.employment_status);
-
     switch (dto.employment_status) {
       case '구직중':
         await this.jobSearchStatus(userId);
@@ -307,6 +305,17 @@ export class UserService {
     userCompany.work_end_date = dto.work_end_date;
 
     await this.userCompanyRepository.save(userCompany);
+
+    const alreadyExists = await this.presentCompanyRepository.findOne({
+      where: { company_id: company.id },
+    });
+
+    if (!alreadyExists) {
+      await this.presentCompanyRepository.save({
+        company_id: company.id,
+        company: company,
+      });
+    }
   }
 
   async updateUserSkillsStatus(userId: number, dto: UpdateSkillsDto) {

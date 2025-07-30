@@ -1,18 +1,18 @@
 import { Body, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
-import { JobInformationEntity } from './entities/job-information.entity';
-import { CompanyInformationEntity } from './entities/company-information.entity';
+import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import {
   AIResponseDto,
   CompanyInformationDto,
   JobInformationDto,
 } from './dto/ai-response.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CompanysDto } from './dto/company.dto';
-import { plainToInstance } from 'class-transformer';
-import { PresentCompanyEntity } from './entities/present-company.entity';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { CompanyInformationEntity } from './entities/company-information.entity';
+import { JobInformationEntity } from './entities/job-information.entity';
+import { PresentCompanyEntity } from './entities/present-company.entity';
 
 @Injectable()
 export class JobService {

@@ -1,13 +1,12 @@
-import { ApplicationFileEntity } from './entities/application-file.entity';
 import { Injectable } from '@nestjs/common';
-import { Request } from 'express';
-import { UserService } from 'src/user/user.service';
-import * as fs from 'fs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ApplicationStatusEntity } from './entities/application-status.entity';
-import { Repository } from 'typeorm';
+import { Request } from 'express';
+import * as fs from 'fs';
 import { JobInformationEntity } from 'src/job/entities/job-information.entity';
-import { CompanyInformationEntity } from 'src/job/entities/company-information.entity';
+import { UserService } from 'src/user/user.service';
+import { Repository } from 'typeorm';
+import { ApplicationFileEntity } from './entities/application-file.entity';
+import { ApplicationStatusEntity } from './entities/application-status.entity';
 
 @Injectable()
 export class ApplyService {
@@ -20,8 +19,6 @@ export class ApplyService {
     private readonly jobInformationRepository: Repository<JobInformationEntity>,
     @InjectRepository(ApplicationFileEntity)
     private readonly applicationFileEntity: Repository<ApplicationFileEntity>,
-    @InjectRepository(CompanyInformationEntity)
-    private readonly companyInformationRepository: Repository<CompanyInformationEntity>,
   ) {}
 
   async inputApply(

@@ -1,3 +1,5 @@
+import { ApplicationFileEntity } from 'src/apply/entities/application-file.entity';
+import { ApplicationStatusEntity } from 'src/apply/entities/application-status.entity';
 import {
   Column,
   Entity,
@@ -7,9 +9,7 @@ import {
 } from 'typeorm';
 import { SocialLoginEntity } from './social-login.entity';
 import { UserCompanyEntity } from './user.company.entity';
-import { ApplicationStatusEntity } from 'src/apply/entities/application-status.entity';
 import { UserExperienceEntity } from './user.experience.entity';
-import { ApplicationFileEntity } from 'src/apply/entities/application-file.entity';
 
 @Entity({ name: 'user', database: 'DBase' })
 export class UserEntity {

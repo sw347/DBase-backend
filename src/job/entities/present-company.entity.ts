@@ -1,9 +1,9 @@
 import {
   Column,
   Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CompanyInformationEntity } from './company-information.entity';
 

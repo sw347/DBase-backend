@@ -1,13 +1,13 @@
 import {
   Column,
   Entity,
-  PrimaryGeneratedColumn,
+  JoinColumn,
   ManyToOne,
   OneToMany,
-  JoinColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { CompanyInformationEntity } from './company-information.entity';
 import { ApplicationStatusEntity } from '../../apply/entities/application-status.entity';
+import { CompanyInformationEntity } from './company-information.entity';
 
 @Entity({ name: 'job_information', database: 'DBase' })
 export class JobInformationEntity {

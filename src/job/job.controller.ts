@@ -9,13 +9,13 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { JobService } from './job.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import * as fs from 'fs';
 import { Request, Response } from 'express';
-import { UpdateCompanyDto } from './dto/update-company.dto';
+import * as fs from 'fs';
+import { diskStorage } from 'multer';
 import * as path from 'path';
+import { UpdateCompanyDto } from './dto/update-company.dto';
+import { JobService } from './job.service';
 
 @Controller('job')
 export class JobController {

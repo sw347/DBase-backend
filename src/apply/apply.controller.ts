@@ -11,16 +11,16 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApplyService } from './apply.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { Request, Response } from 'express';
-import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
-import * as fs from 'fs';
 import * as archiver from 'archiver';
+import { Request, Response } from 'express';
+import * as fs from 'fs';
+import { diskStorage } from 'multer';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { User } from 'src/user/decorator/user.decorator';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { ApplyService } from './apply.service';
 
 @Controller('apply')
 export class ApplyController {

@@ -1,3 +1,4 @@
+import { CompanyInformationEntity } from 'src/job/entities/company-information.entity';
 import {
   Column,
   Entity,
@@ -6,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { CompanyInformationEntity } from 'src/job/entities/company-information.entity';
 
 @Entity({ name: 'user_company', database: 'DBase' })
 export class UserCompanyEntity {
