@@ -32,7 +32,9 @@ export class AuthService {
       user = await this.userService.findUserByIdentifier(oauthUser.identifier);
     }
 
-    if (user == null) throw new LoginException('cannot find user');
+    if (user == null) {
+      throw new LoginException('학교 계정이 아닙니다.');
+    }
 
     const accessToken = await this.createAccessToken(oauthUser.identifier);
     const refreshToken = await this.createRefreshToken(oauthUser.identifier);
@@ -69,7 +71,7 @@ export class AuthService {
       const payload = this.jwtService.verify(accessToken, {
         secret: this.configService.get('SECRET_KEY'),
       });
-      console.log('JWT Payload:', payload);
+
       const userId = payload.identifier;
 
       const user = await this.userService.findOneByIdentifier(userId);

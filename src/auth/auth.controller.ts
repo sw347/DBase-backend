@@ -4,6 +4,7 @@ import {
   HttpStatus,
   InternalServerErrorException,
   Res,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -11,15 +12,11 @@ import { GoogleAuthGuard } from './google/google.guard';
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/decorator/user.decorator';
 import { OauthUserDto } from './dto/oauth-user.dto';
-import { LoginException } from './exception/login.exception';
 import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @UseGuards(GoogleAuthGuard)
   @Get('/google')
@@ -33,6 +30,11 @@ export class AuthController {
     @User() user: OauthUserDto,
     @Res() response: Response,
   ): Promise<void> {
+    const redirectHref =
+      process.env.LOCAL === 'true'
+        ? 'http://localhost:5173'
+        : 'https://dbase.o-r.kr/';
+
     try {
       const { accessToken, refreshToken } = await this.authService.login(user);
 
@@ -41,21 +43,11 @@ export class AuthController {
       });
 
       response.cookie('refreshToken', refreshToken);
-
-      const redirectHref =
-        process.env.LOCAL === 'true'
-          ? 'http://localhost:5173'
-          : 'https://dbase.o-r.kr/';
-
       response.redirect(redirectHref); // 다시 돌아올 경로
     } catch (error) {
       console.error(error);
 
-      if (error instanceof LoginException) {
-        throw new InternalServerErrorException('login Failed');
-      } else {
-        throw new InternalServerErrorException();
-      }
+      return response.redirect(redirectHref);
     }
   }
 }

@@ -70,6 +70,10 @@ export class UserService {
     let category = 'student';
 
     try {
+      if (!oauthUser.email.includes('@sdh.hs.kr')) {
+        return null;
+      }
+
       if (oauthUser.email.match('sdh230304')) category = 'teacher';
       else if (oauthUser.email.match('sdh230303')) category = 'teacher';
       else if (oauthUser.email.match('sdh230310')) category = 'teacher';
