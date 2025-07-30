@@ -243,14 +243,21 @@ export class UserService {
     userId: number,
     dto: UpdateUserCompanyStatusDto,
   ) {
-    let company = await this.companyInformationRepository.findOne({
-      where: { company_name: dto.company_name },
-    });
+    console.log(dto.employment_status);
 
-    if (!company) {
-      throw new Error('해당 회사가 존재하지 않습니다.');
+    switch (dto.employment_status) {
+      case '구직중':
+        await this.jobSearchStatus(userId);
+        break;
+      case '취업 완료':
+        await this.employmentStatus(userId, dto);
+        break;
     }
 
+    return { success: true, message: '업데이트 완료' };
+  }
+
+  async jobSearchStatus(userId: number) {
     const userCompany = await this.userCompanyRepository.findOne({
       where: {
         userId: userId,
@@ -262,6 +269,36 @@ export class UserService {
       throw new Error('해당 유저의 회사 정보가 없습니다.');
     }
 
+    userCompany.company_id = null;
+    userCompany.company_name = null;
+    userCompany.employment_status = '구직중';
+    userCompany.desired_position = null;
+    userCompany.work_start_date = null;
+    userCompany.work_end_date = null;
+
+    await this.userCompanyRepository.save(userCompany);
+  }
+
+  async employmentStatus(userId: number, dto: UpdateUserCompanyStatusDto) {
+    const userCompany = await this.userCompanyRepository.findOne({
+      where: {
+        userId: userId,
+      },
+      relations: ['company'], // 회사 정보도 함께 불러오기
+    });
+
+    if (!userCompany) {
+      throw new Error('해당 유저의 회사 정보가 없습니다.');
+    }
+
+    let company = await this.companyInformationRepository.findOne({
+      where: { company_name: dto.company_name },
+    });
+
+    if (!company) {
+      throw new Error('해당 회사가 존재하지 않습니다.');
+    }
+
     userCompany.company_name = dto.company_name;
     userCompany.employment_status = dto.employment_status;
     userCompany.desired_position = dto.desired_position;
@@ -270,21 +307,6 @@ export class UserService {
     userCompany.work_end_date = dto.work_end_date;
 
     await this.userCompanyRepository.save(userCompany);
-
-    if (dto.employment_status === '구직중') {
-      const alreadyExists = await this.presentCompanyRepository.findOne({
-        where: { company_id: company.id },
-      });
-
-      if (!alreadyExists) {
-        await this.presentCompanyRepository.save({
-          company_id: company.id,
-          company: company,
-        });
-      }
-    }
-
-    return { success: true, message: '업데이트 완료' };
   }
 
   async updateUserSkillsStatus(userId: number, dto: UpdateSkillsDto) {
